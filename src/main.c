@@ -19,11 +19,15 @@ int main(){
     codFuncionalidade = atoi(parametro);
   } else{
     printf("Entrada invalida!!!");
+
     return 0;
   }
 
+  //switch para executar a funcionalidade correta requisitada pelo usuário
   switch(codFuncionalidade){
+    //funcionalidade 1: criar arquivo de index apenas com cabeçalho
     case 1:
+      //obtem o nome do arquivo de indice passado como parâmetro
       nomeArquivoIndice = strtok(NULL, " ");
       createIndex(nomeArquivoIndice);
 
@@ -34,6 +38,7 @@ int main(){
       break;
     case 4:
       break;
+    //caso o usuário digite alguma opção que não é de 1 a 4
     default: 
       printf("Opcao invalida");
   }

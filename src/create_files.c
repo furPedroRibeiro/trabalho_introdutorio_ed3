@@ -4,6 +4,7 @@
 //create_file.c tem como principal função usar e implementar funções e variáveis definidas em create_file.h
 #include "../headers/create_files.h"
 
+//função para criar o arquivo de index
 void createIndex(const char *nomeArquivoIndice){
   //caminho onde os binário devem ser criados:
   char caminho[100] = "./bin/";
@@ -26,7 +27,6 @@ void createIndex(const char *nomeArquivoIndice){
   //escreve o cabeçalho no arquivo
   fwrite(&status, sizeof(char), 1, arqIndice);
   fwrite(lixo, sizeof(char), strlen(lixo), arqIndice);
-  fwrite(&numero, sizeof(int), 1, arqIndice);
 
-  fclose(arqIndice); 
+  fclose(arqIndice);
 }
