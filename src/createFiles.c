@@ -34,5 +34,5 @@ void criarIndice(const char *nomeArquivoIndice){
 
 void criarArquivoDados(const char *nomeArquivoEntrada, const char *nomeArquivoSaida, const char *nomeArquivoIndice){
   //chama uma função para criar uma estrutura de dados com todos os registros do arquivo de entrada, a função retorna um ponteiro que aponta para o primeiro registro da lista ligada
-  registro* lerCSV(nomeArquivoEntrada);
+  registro* raizLista = lerCSV(nomeArquivoEntrada);
 }

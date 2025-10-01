@@ -29,6 +29,8 @@ typedef struct Index{
 
 //FUNÇÃO DE LER O ARQUIVO CSV
 
+registro* lerCSV();
+
 #endif
 
 
