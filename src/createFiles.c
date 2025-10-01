@@ -1,11 +1,12 @@
 //Aluno 1: Pedro Luis de Alencar Ribeiro N° USP: 15590852
 //Aluno 2: Bianca Duarte Batista Lacerda N° USP: 15443221
 
-//create_file.c tem como principal função usar e implementar funções e variáveis definidas em create_file.h
-#include "../headers/create_files.h"
+//create_file.c tem como principal função usar e implementar funções e variáveis definidas em createFile.h e funcoesAuxiliares.h
+#include "../headers/createFiles.h"
+#include "../headers/auxiliar.h"
 
 //função para criar o arquivo de index
-void createIndex(const char *nomeArquivoIndice){
+void criarIndice(const char *nomeArquivoIndice){
   //caminho onde os binário devem ser criados:
   char caminho[100] = "./bin/";
   //concatena o caminho com o nome do arquivo
@@ -29,4 +30,9 @@ void createIndex(const char *nomeArquivoIndice){
   fwrite(lixo, sizeof(char), strlen(lixo), arqIndice);
 
   fclose(arqIndice);
+}
+
+void criarArquivoDados(const char *nomeArquivoEntrada, const char *nomeArquivoSaida, const char *nomeArquivoIndice){
+  //chama uma função para criar uma estrutura de dados com todos os registros do arquivo de entrada, a função retorna um ponteiro que aponta para o primeiro registro da lista ligada
+  registro* lerCSV(nomeArquivoEntrada);
 }

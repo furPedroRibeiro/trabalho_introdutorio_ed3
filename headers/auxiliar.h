@@ -1,9 +1,9 @@
 //Aluno 1: Pedro Luis de Alencar Ribeiro N° USP: 15590852
 //Aluno 2: Bianca Duarte Batista Lacerda N° USP: 15443221
 
-//esse arquivo de cabeçalho .h tem como essência definir as funções, variáveis, etc. que serão usadas e implementadas em create_file.c
-#ifndef CREATE_FILE_H
-#define CREATE_FILE_H
+//esse arquivo de cabeçalho .h tem como essência definir as funções, variáveis, etc. que podem ser usadas e implementadas por todos os arquivos .c, portanto são funções, estruturas de dados e variáveis auxiliares
+#ifndef AUXILIAR_H
+#define AUXILIAR_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,8 +27,7 @@ typedef struct Index{
   struct index *proxIndex;
 } index;
 
-void createIndex(const char *nomeArquivoIndice);
-
+//FUNÇÃO DE LER O ARQUIVO CSV
 
 #endif
 
