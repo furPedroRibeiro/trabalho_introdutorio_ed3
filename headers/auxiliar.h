@@ -21,15 +21,23 @@ typedef struct Registro{
   struct registro *proxRegistro;
 } registro;
 
-typedef struct Index{
+//definindo que a raiz da lista começa vazia
+registro* raizLista = NULL;
+
+typedef struct Indice{
   int idPessoa;
   long int byteOffset;
-  struct index *proxIndex;
-} index;
+  struct indice *proxIndice;
+  struct indice *antIndice;
+} indice;
+
+//definindo que a raiz da lista de indice começa vazia
+indice* raizListaIndice = NULL;
 
 //FUNÇÃO DE LER O ARQUIVO CSV
 
 registro* lerCSV();
+void criarNoRegistro(registro* novoRegistro, char campoIdPessoa, char campoIdadePessoa, char campoNomePessoa, char campoNomeUsuario, int tamRegistroBytes, long int byteoffset);
 
 #endif
 
