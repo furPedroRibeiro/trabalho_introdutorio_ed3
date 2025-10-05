@@ -5,20 +5,26 @@ CFLAGS = -Wall -lm
 TARGET = trabPratico
 MAIN = ./src/main.c
 MAIN_O = ./objects/main.o
-CREATE_FILES_C = ./src/create_files.c
-CREATE_FILES_H = ./headers/create_files.h
-CREATE_FILES_O = ./objects/create_files.o
+CREATE_FILES_C = ./src/createFiles.c
+CREATE_FILES_H = ./headers/createFiles.h
+CREATE_FILES_O = ./objects/createFiles.o
+AUXILIAR_C = ./src/auxiliar.c
+AUXILIAR_H = ./headers/auxiliar.h
+AUXILIAR_O = ./objects/auxiliar.o
 
 all: $(TARGET)
 
-$(TARGET): $(MAIN_O) $(CREATE_FILES_O)
-	$(CC) $(MAIN_O) $(CREATE_FILES_O) -o $(TARGET) $(CFLAGS)
+$(TARGET): $(MAIN_O) $(CREATE_FILES_O) $(AUXILIAR_O)
+	$(CC) $(MAIN_O) $(CREATE_FILES_O) $(AUXILIAR_O) -o $(TARGET) $(CFLAGS)
 
 $(MAIN_O): $(MAIN) $(CREATE_FILES_H)
 	$(CC) -c $(MAIN) -o $(MAIN_O)
 
-$(CREATE_FILES_O): $(CREATE_FILES_C) $(CREATE_FILES_H)
+$(CREATE_FILES_O): $(CREATE_FILES_C) $(CREATE_FILES_H) $(AUXILIAR_H)
 	$(CC) -c $(CREATE_FILES_C) -o $(CREATE_FILES_O)
+
+$(AUXILIAR_O): $(AUXILIAR_C) $(AUXILIAR_H)
+	$(CC) -c $(AUXILIAR_C) -o $(AUXILIAR_O)
 
 clean:
 	rm -f ./objects/*.o $(TARGET)

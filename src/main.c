@@ -3,7 +3,6 @@
 
 #include "../headers/createFiles.h"
 #include "../headers/functions.h"
-#include "../headers/auxiliar.h"
 
 int main(){
   //variáveis que podem ser usadas para chamadas e execução de funções:

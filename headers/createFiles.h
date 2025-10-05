@@ -5,7 +5,9 @@
 #ifndef CREATE_FILE_H
 #define CREATE_FILE_H
 
-#include "auxiliar.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 void criarIndice(const char *nomeArquivoIndice);
 void criarArquivoDados(const char *nomeArquivoEntrada, const char *nomeArquivoSaida, const char *nomeArquivoIndice);

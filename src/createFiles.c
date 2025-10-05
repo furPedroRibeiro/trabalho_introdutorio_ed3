@@ -5,7 +5,7 @@
 #include "../headers/createFiles.h"
 #include "../headers/auxiliar.h"
 
-//função para criar o arquivo de index
+//função para criar o arquivo de indice
 void criarIndice(const char *nomeArquivoIndice){
   //caminho onde os binário devem ser criados:
   char caminho[100] = "./bin/";
@@ -33,6 +33,24 @@ void criarIndice(const char *nomeArquivoIndice){
 }
 
 void criarArquivoDados(const char *nomeArquivoEntrada, const char *nomeArquivoSaida, const char *nomeArquivoIndice){
-  //chama uma função para criar uma estrutura de dados com todos os registros do arquivo de entrada
+  //chama uma função para criar uma estrutura de dados com todos os registros do arquivo de entrada, e cria também a estrutura de dados do indice
+  puts("chegou na função criarArquivoDados");
   lerCSV(nomeArquivoEntrada);
+
+  //aqui as raízes das listas são obtidas
+  registro* raizLista = retornaRaizListaRegistro();
+  indice* raizListaIndice = retornaRaizListaIndice();
+  
+  //mostra elementos da raiz
+
+  // printf("Tamanho do registro: %d", raizLista->tamRegistro);
+  // printf("Removido: %c", raizLista->removido);
+  // printf("ID da pessoa 1: %d", raizLista->idPessoa);
+  // printf("Idade da pessoa 1: %d", raizLista->idadePessoa);
+  // printf("Nome da pessoa 1: %s", raizLista->nome);
+  // printf("Tamanho nome da pessoa 1: %d", raizLista->tamanhoNomePessoa);
+  // printf("Nome de usuário 1: %s", raizLista->nomeUsuario);
+  // printf("Tamanho nome da usuário 1: %d", raizLista->tamanhoNomeUsuario);
+
+  //com a estrutura de dados criada, 
 }
