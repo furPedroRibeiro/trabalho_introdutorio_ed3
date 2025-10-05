@@ -35,7 +35,8 @@ void lerCSV(const char *nomeArquivoEntrada){
 
   //aqui começa a leitura a partir da segunda linha do arquivo de dados
   while(fgets(bufferLinha, sizeof(bufferLinha), arqDados) != NULL){
-    printf("%s", bufferLinha);
+    //print pra ver se deu certo:
+    //printf("%s", bufferLinha);
     //contador de tamanho de registro, tem no mínimo 21 bytes por registro por causa dos campos de tamanho fixo
     long int tamRegistroBytes = 21;
     //removendo \n do fim da string

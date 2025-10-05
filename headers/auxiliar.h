@@ -50,14 +50,3 @@ long int retornaProxByteOffset();
 char* meu_strsep(char** , const char* delim);
 
 #endif
-
-
-
-
-
-
-
-
-
-
-

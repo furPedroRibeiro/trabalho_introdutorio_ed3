@@ -1,10 +1,13 @@
-#include <stdio.h>
+//Aluno 1: Pedro Luis de Alencar Ribeiro N° USP: 15590852
+//Aluno 2: Bianca Duarte Batista Lacerda N° USP: 15443221
+
+#include "../headers/utilidades.h"
 
 /*
 Função para imprimir dados salvos no arquivo em binário
 (util para comparar saida no run codes)
 */
-void binarioNaTela(char *nomeArquivoBinario) { 
+void binarioNaTela(char *nomeArquivoBinario){ 
 
 	/* Use essa função para comparação no run.codes. Lembre-se de ter fechado (fclose) o arquivo anteriormente.
 	*  Ela vai abrir de novo para leitura e depois fechar (você não vai perder pontos por isso se usar ela). */
@@ -13,7 +16,9 @@ void binarioNaTela(char *nomeArquivoBinario) {
 	unsigned char *mb;
 	size_t fl;
 	FILE *fs;
-	if(nomeArquivoBinario == NULL || !(fs = fopen(nomeArquivoBinario, "rb"))) {
+	char caminho[100] = "./bin/";
+	strcat(caminho, nomeArquivoBinario);
+	if(nomeArquivoBinario == NULL || !(fs = fopen(caminho, "rb"))) {
 		fprintf(stderr, "ERRO AO ESCREVER O BINARIO NA TELA (função binarioNaTela): não foi possível abrir o arquivo que me passou para leitura. Ele existe e você tá passando o nome certo? Você lembrou de fechar ele com fclose depois de usar?\n");
 		return;
 	}
@@ -32,7 +37,7 @@ void binarioNaTela(char *nomeArquivoBinario) {
 	fclose(fs);
 }
 
-void scan_quote_string(char *str) {
+void scan_quote_string(char *str){
 
 	/*
 	*	Use essa função para ler um campo string delimitado entre aspas (").

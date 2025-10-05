@@ -9,8 +9,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-void criarIndice(const char *nomeArquivoIndice);
-void criarArquivoDados(const char *nomeArquivoEntrada, const char *nomeArquivoSaida, const char *nomeArquivoIndice);
+void criarIndice(char *nomeArquivoIndice);
+void criarArquivoDados(const char *nomeArquivoEntrada, char *nomeArquivoSaida, const char *nomeArquivoIndice);
 
 
 #endif

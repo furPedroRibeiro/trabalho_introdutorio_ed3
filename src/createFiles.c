@@ -5,8 +5,11 @@
 #include "../headers/createFiles.h"
 #include "../headers/auxiliar.h"
 
+//inclui utilidades.h para usar a função binário na tela
+#include "../headers/utilidades.h"
+
 //função para criar o arquivo de indice
-void criarIndice(const char *nomeArquivoIndice){
+void criarIndice(char *nomeArquivoIndice){
   //caminho onde os binário devem ser criados:
   char caminho[100] = "./bin/";
   //concatena o caminho com o nome do arquivo
@@ -29,10 +32,14 @@ void criarIndice(const char *nomeArquivoIndice){
   fwrite(&status, sizeof(char), 1, arqIndice);
   fwrite(lixo, sizeof(char), strlen(lixo), arqIndice);
 
+  //fecha o arquivo
   fclose(arqIndice);
+
+  //usa binario na tela como especificado no trabalho
+  binarioNaTela(nomeArquivoIndice);
 }
 
-void criarArquivoDados(const char *nomeArquivoEntrada, const char *nomeArquivoSaida, const char *nomeArquivoIndice){
+void criarArquivoDados(const char *nomeArquivoEntrada, char *nomeArquivoSaida, const char *nomeArquivoIndice){
   //chama uma função para criar uma estrutura de dados com todos os registros do arquivo de entrada, e cria também a estrutura de dados do indice
   lerCSV(nomeArquivoEntrada);
 
@@ -53,7 +60,6 @@ void criarArquivoDados(const char *nomeArquivoEntrada, const char *nomeArquivoSa
   //com a estrutura de dados criada, o que resta é inserir nos arquivos de dados e índice os dados coletados de dados.csv
 
   //abrindo os arquivos:
-
   //fazendo com que o arquivo seja criado em ./bin
   char caminho_1[100] = "./bin/";
   strcat(caminho_1, nomeArquivoIndice);
@@ -102,7 +108,7 @@ void criarArquivoDados(const char *nomeArquivoEntrada, const char *nomeArquivoSa
     char *nomeUsuario = noAuxiliar->nomeUsuario;
     
     //print nas variáveis pra ver se ta escrevendo certo
-    printf("\n\nRemovido: %c Tamanho do Registro: %d Id pessoa: %d Idade pessoa: %d Tamanho do nome da pessoa: %d Nome da pessoa: %s Tamanho do nome de usuario: %d Nome de Usuario: %s", noAuxiliar->removido[0], tamanhoRegistro, idPessoa, idadePessoa, tamNomePessoa, nomePessoa, tamNomeUsuario, nomeUsuario);
+    //printf("\n\nRemovido: %c Tamanho do Registro: %d Id pessoa: %d Idade pessoa: %d Tamanho do nome da pessoa: %d Nome da pessoa: %s Tamanho do nome de usuario: %d Nome de Usuario: %s", noAuxiliar->removido[0], tamanhoRegistro, idPessoa, idadePessoa, tamNomePessoa, nomePessoa, tamNomeUsuario, nomeUsuario);
 
     //fwrite pro arquivo
     fwrite(&noAuxiliar->removido[0], sizeof(char), 1, arqDadosSaida);
@@ -110,12 +116,17 @@ void criarArquivoDados(const char *nomeArquivoEntrada, const char *nomeArquivoSa
     fwrite(&idPessoa, sizeof(int), 1, arqDadosSaida);
     fwrite(&idadePessoa, sizeof(int), 1, arqDadosSaida);
     fwrite(&tamNomePessoa, sizeof(int), 1, arqDadosSaida);
-    fwrite(&nomePessoa, sizeof(char), strlen(nomePessoa), arqDadosSaida);
+    fwrite(nomePessoa, sizeof(char), strlen(nomePessoa), arqDadosSaida);
     fwrite(&tamNomeUsuario, sizeof(int), 1, arqDadosSaida);
-    fwrite(&nomeUsuario, sizeof(char), strlen(nomeUsuario), arqDadosSaida);
+    fwrite(nomeUsuario, sizeof(char), strlen(nomeUsuario), arqDadosSaida);
 
     noAuxiliar = noAuxiliar->proxRegistro;
   }
+
+
+
+
+
 
   //INSERÇÃO NO ARQUIVO DE ÍNDICE:
   //o arquivo de indice já existe, portanto já tem cabeçalho existente
@@ -129,7 +140,7 @@ void criarArquivoDados(const char *nomeArquivoEntrada, const char *nomeArquivoSa
     long int byteoffset = noAuxiliarIndice->byteOffset;
 
     //print pra ver se deu certo:
-    printf("\n\nId pessoa: %d byteoffset: %ld", idPessoa, byteoffset);
+    //printf("\n\nId pessoa: %d byteoffset: %ld ", idPessoa, byteoffset);
 
 
     //escreve no arquivo de índice
@@ -140,9 +151,10 @@ void criarArquivoDados(const char *nomeArquivoEntrada, const char *nomeArquivoSa
     noAuxiliarIndice = noAuxiliarIndice->proxIndice;
   }
 
+  //fechando os 2 arquivos
   fclose(arqIndice);
   fclose(arqDadosSaida);
 
-  puts("DEU CERTOOOOO");
-
+  //usa função binário na tela como especificado no trabalho
+  binarioNaTela(nomeArquivoSaida);
 }
