@@ -12,7 +12,7 @@
 
 //estrutura de dados do tipo lista para armazenar os registros antes de escrever no arquivo de dados que será gerado, a lista possui encadeamento simples porque não há necessidade dos dados serem ordenados nem nada do tipo, a única necessidade é que a lista exista e o encadeamento seja feito de maneira correta
 typedef struct registro{
-  char removido;
+  char removido[2];
   int tamRegistro;
   int idPessoa;
   int idadePessoa;
@@ -41,6 +41,10 @@ void criarNoRegistroIndice(indice* novoRegistroIndice, char *campoIdPessoa, long
 //as funções a seguir retornam apenas as raízes das listas(funções implementadas em auxiliar.c e usadas também por createFiles.c)
 registro* retornaRaizListaRegistro();
 indice* retornaRaizListaIndice();
+
+//funções que retornam dados necessários para construção do cabeçalho
+int retornaQuantidadePessoas();
+long int retornaProxByteOffset();
 
 //função strsep aqui(não roda em windows a função strsep definida direto pelo GNU(se não me engano))
 char* meu_strsep(char** , const char* delim);

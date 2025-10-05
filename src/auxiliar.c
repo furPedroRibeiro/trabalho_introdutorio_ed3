@@ -7,11 +7,17 @@
 registro* raizLista = NULL;
 indice* raizListaIndice = NULL;
 
+//definindo ultimo elemento = NULL
+
+registro* ultimoElemento = NULL;
+
+//quantidade de pessoas presentes no arquivo de dados
+int quantidadePessoas = 0;
+//contador de byteoffset para auxiliar na criação da lista de indice, o byteoffset deve levar em consideração que existe um cabeçalho no arquivo de dados, que ocupa 16 bytes, portanto o primeiro byteoffset livre é:
+long int byteoffset = 17;
+
 //essa função lê o arquivo csv e monta a lista ligada definida em auxiliar.h
 void lerCSV(const char *nomeArquivoEntrada){
-  //contador de byteoffset para auxiliar na criação da lista de indice, o byteoffset deve levar em consideração que existe um cabeçalho no arquivo de dados, que ocupa 16 bytes, portanto o primeiro byteoffset livre é:
-  int byteoffset = 17;
-   
   //criando buffer para ler uma linha do arquivo
   char bufferLinha[1024];
   
@@ -21,7 +27,7 @@ void lerCSV(const char *nomeArquivoEntrada){
   //se der erro no processamento do arquivo, aparece a seguinte mensagem:
   if(arqDados == NULL){
     puts("Falha no processamento do arquivo.");
-
+    return;
   }
 
   //fgets para ignorar a primeira linha do arquivo csv, que contém os nomes dos campos
@@ -58,6 +64,9 @@ void lerCSV(const char *nomeArquivoEntrada){
     //atualizando byteoffset de modo que o próximo byteoffset livre seja depois do registro que acabou de ser inserido 
     byteoffset += raizLista->tamRegistro;
     //a raíz da lista sempre vai ser o elemento que acabou de ser inserido, então faz sentido pegar o tamanho desse registro para atualizar byteoffset
+  
+    //atualiza a quantidade de pessoas
+    quantidadePessoas++;
   }
 
   //acabou a leitura do arquivo e a criação das 2 listas, fecha o arquivo
@@ -98,11 +107,24 @@ void criarNoRegistro(registro* novoRegistro, char *campoIdPessoa, char *campoIda
     strcpy(novoRegistro->nomeUsuario, "");
   }
 
+  //caso para a raiz da lista ser nula
+  if(raizLista == NULL){
+    novoRegistro->removido[0] = '0'; // 0 é não removido
+    novoRegistro->tamRegistro = tamRegistroBytes;
+    raizLista = novoRegistro;
+    novoRegistro->proxRegistro = NULL;
+    ultimoElemento = novoRegistro;
+
+    return;
+  }
+
   //definindo dados que não são lidos do csv
-  novoRegistro->removido = '0'; // 0 é não removido
+  novoRegistro->removido[0] = '0'; // 0 é não removido
   novoRegistro->tamRegistro = tamRegistroBytes; 
-  novoRegistro->proxRegistro = raizLista; //insere o novo registro na raíz da lista
-  raizLista = novoRegistro; //atualiza a raiz, que agora é o próprio novo registro
+  novoRegistro->proxRegistro = NULL; //insere o novo registro na raíz da lista
+  ultimoElemento->proxRegistro = novoRegistro;
+  ultimoElemento = novoRegistro; 
+
 }
 
 //essa função cria e adiciona um nó novo a lista duplamente encadeada de registros do arquivo de índice
@@ -199,4 +221,12 @@ indice* retornaRaizListaIndice(){
   return raizListaIndice;
 }
 
+//função que retorna a quantidade de pessoas armazenadas
+int retornaQuantidadePessoas(){
+  return quantidadePessoas;
+}
 
+//função que retorna o próximo byteoffset disponível
+long int retornaProxByteOffset(){
+  return byteoffset;
+}

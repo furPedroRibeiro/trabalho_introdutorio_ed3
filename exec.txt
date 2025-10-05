@@ -1,0 +1,2 @@
+1 arquivoIndicePrimario.bin
+2 arquivoEntrada.csv arquivoSaida.bin arquivoIndicePrimario.bin
