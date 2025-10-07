@@ -18,15 +18,19 @@ UTILIDADES_C = ./src/utilidades.c
 UTILIDADES_H = ./headers/utilidades.h
 UTILIDADES_O = ./objects/utilidades.o
 
+READ_BINARY_C = ./src/readBinary.c
+READ_BINARY_H = ./headers/readBinary.h
+READ_BINARY_O = ./objects/readBinary.o
+
 all: $(TARGET)
 
-$(TARGET): $(MAIN_O) $(CREATE_FILES_O) $(AUXILIAR_O) $(UTILIDADES_O)
-	$(CC) $(MAIN_O) $(CREATE_FILES_O) $(AUXILIAR_O) $(UTILIDADES_O) -o $(TARGET) $(CFLAGS)
+$(TARGET): $(MAIN_O) $(CREATE_FILES_O) $(AUXILIAR_O) $(UTILIDADES_O) $(READ_BINARY_O)
+	$(CC) $(MAIN_O) $(CREATE_FILES_O) $(AUXILIAR_O) $(UTILIDADES_O) $(READ_BINARY_O) -o $(TARGET) $(CFLAGS)
 
 $(MAIN_O): $(MAIN) $(CREATE_FILES_H)
 	$(CC) -c $(MAIN) -o $(MAIN_O)
 
-$(CREATE_FILES_O): $(CREATE_FILES_C) $(CREATE_FILES_H) $(AUXILIAR_H) $(UTILIDADES_H)
+$(CREATE_FILES_O): $(CREATE_FILES_C) $(CREATE_FILES_H) $(AUXILIAR_H) $(UTILIDADES_H) $(READ_BINARY_H)
 	$(CC) -c $(CREATE_FILES_C) -o $(CREATE_FILES_O)
 
 $(AUXILIAR_O): $(AUXILIAR_C) $(AUXILIAR_H)
@@ -35,11 +39,11 @@ $(AUXILIAR_O): $(AUXILIAR_C) $(AUXILIAR_H)
 $(UTILIDADES_O): $(UTILIDADES_C) $(UTILIDADES_H)
 	$(CC) -c $(UTILIDADES_C) -o $(UTILIDADES_O)
 
+$(READ_BINARY_O): $(READ_BINARY_C) $(READ_BINARY_H)
+	$(CC) -c $(READ_BINARY_C) -o $(READ_BINARY_O)
+
 clean:
 	rm -f ./objects/*.o $(TARGET)
-
-delete:
-	rm -f ./bin/*.bin
 
 run: $(TARGET)
 	$(TARGET)
