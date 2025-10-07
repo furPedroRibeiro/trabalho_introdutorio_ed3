@@ -2,14 +2,22 @@
 //Aluno 2: Bianca Duarte Batista Lacerda N° USP: 15443221
 
 //esse arquivo de cabeçalho .h tem como essência definir as funções, variáveis, etc. que serão usadas e implementadas em functions.c
-#ifndef FUNCTIONS_H
-#define FUNCTIONS_H
+#ifndef READ_BINARY_H
+#define READ_BINARY_H
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+// Estrutura auxiliar para armazenar os campos de um registro
+struct registro2 {
+    int idPessoa, idadePessoa;
+    int tamNomePessoa, tamNomeUsuario;
+    char nomePessoa[100];
+    char nomeUsuario[100];
+} reg;
 
+void listarRegistros(char *nomeArquivoEntrada);
 
 
 #endif

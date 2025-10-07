@@ -2,7 +2,7 @@
 //Aluno 2: Bianca Duarte Batista Lacerda N° USP: 15443221
 
 #include "../headers/createFiles.h"
-#include "../headers/functions.h"
+#include "../headers/readBinary.h"
 
 int main(){
   //variáveis que podem ser usadas para chamadas e execução de funções:
@@ -52,6 +52,10 @@ int main(){
 
       break;
     case 3: 
+      //obtem o nome do arquivo de entrada passado como parametro
+      nomeArquivoEntrada = strtok(NULL, " ");
+      //chama a funcionalidade 3
+      listarRegistros(nomeArquivoEntrada);
       break;
     case 4:
       break;
