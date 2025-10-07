@@ -1,2 +1,3 @@
 1 indice4.bin
 2 dados.csv pessoas4.bin indice4.bin
+3 pessoas4.bin

@@ -17,6 +17,7 @@ struct registro2 {
     char nomeUsuario[100];
 } reg;
 
+//função de listar todos os registros, é a funcionalidade 3 do trabalho e tem como objetivo listar todos os registros do arquivo de dados
 void listarRegistros(char *nomeArquivoEntrada);
 
 

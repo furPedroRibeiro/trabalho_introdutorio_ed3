@@ -45,5 +45,8 @@ $(READ_BINARY_O): $(READ_BINARY_C) $(READ_BINARY_H)
 clean:
 	rm -f ./objects/*.o $(TARGET)
 
+delete:
+	rm -f ./bin/*.bin
+
 run: $(TARGET)
 	$(TARGET)

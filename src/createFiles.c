@@ -1,7 +1,8 @@
 //Aluno 1: Pedro Luis de Alencar Ribeiro N° USP: 15590852
 //Aluno 2: Bianca Duarte Batista Lacerda N° USP: 15443221
 
-//create_file.c tem como principal função usar e implementar funções e variáveis definidas em createFile.h e funcoesAuxiliares.h
+//createFiles.c tem como principal função usar e implementar funções e variáveis definidas em createFiles.h e algumas outras funções e variáveis vindas de outro arquivo
+//nesse arquivo estão as funcionalidades 1 e 2, que dizem respeito a criação de arquivo de índice e escrita nos arquivos de índice e de dados 
 #include "../headers/createFiles.h"
 #include "../headers/auxiliar.h"
 

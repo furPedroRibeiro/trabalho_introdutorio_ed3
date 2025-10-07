@@ -1,6 +1,10 @@
 // Aluno 1: Pedro Luis de Alencar Ribeiro N° USP: 15590852
 // Aluno 2: Bianca Duarte Batista Lacerda N° USP: 15443221
 
+//readBinary.c tem como principal função usar e implementar funções e variáveis definidas em readBinary.h e algumas outras funções e variáveis vindas de outros arquivos
+//nesse arquivo estão as funcionalidades 3 e 4, que dizem respeito a busca nos arquivos de índice e de dados
+
+//incluindo arquivos de cabeçalho utilizados nesse arquivo de implementação
 #include "../headers/readBinary.h"
 #include "../headers/auxiliar.h"
 
@@ -17,20 +21,25 @@ void listarRegistros(char *nomeArquivoEntrada){
     }
 
     // Leitura do cabeçalho do arquivo binário
+    //criação de variáveis para armazenar cabeçalho
     char status;
     int quantidadePessoas;
     int quantidadeRemovidos;
     long int proxByteoffset;
 
     // fread(buff, sizeof, qnt, FILE)
+    //lendo status
     if (fread(&status, sizeof(status), 1, arqPessoa) != 1){
         // Se o status for diferente de 1 o arquivo de dados está inconsistente
         puts("Falha no processamento do arquivo");
         fclose(arqPessoa);
         return;
     };
+    //lendo quantidade de pessoas
     fread(&quantidadePessoas, sizeof(int), 1, arqPessoa);
+    //lendo quantidade de pessoas removidas
     fread(&quantidadeRemovidos, sizeof(int), 1, arqPessoa);
+    //lendo próximo byteoffset livre para registro
     fread(&proxByteoffset, sizeof(long int), 1, arqPessoa);
 
     // Tamanho do arquivo
@@ -60,25 +69,27 @@ void listarRegistros(char *nomeArquivoEntrada){
         reg.nomeUsuario[reg.tamNomeUsuario]='\0';
 
         // Exibe o registro formatado
+        //exibindo id
         printf("Dados da pessoa de codigo %d\n", reg.idPessoa);
+        //exibindo nome
         if (reg.tamNomePessoa > 0){
             printf("Nome: %s\n", reg.nomePessoa);
         } else{
             printf("Nome: -\n");
         }
-
+        //exibindo idade
         if (reg.idadePessoa == -1){
             printf("Idade: -\n");
         } else{
             printf("Idade: %d\n", reg.idadePessoa);
         }
-
+        //exibindo nome de usuário
         if (reg.tamNomeUsuario > 0){
             printf("Usuario: %s\n\n", reg.nomeUsuario);
         } else{
             printf("Usuario: -\n\n");
         }
-
     }
+    //fechando arquivo
     fclose(arqPessoa);
 }
