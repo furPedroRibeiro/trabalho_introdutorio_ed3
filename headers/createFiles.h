@@ -7,10 +7,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 
 void criarIndice(char *nomeArquivoIndice);
-void criarArquivoDados(const char *nomeArquivoEntrada, char *nomeArquivoSaida, const char *nomeArquivoIndice);
+void criarArquivoDados(const char *nomeArquivoEntrada, char *nomeArquivoSaida, char *nomeArquivoIndice);
 
 
 #endif

@@ -1,2 +1,2 @@
-1 arquivoIndicePrimario.bin
-2 arquivoEntrada.csv arquivoSaida.bin arquivoIndicePrimario.bin
+1 indice4.bin
+2 dados.csv pessoas4.bin indice4.bin

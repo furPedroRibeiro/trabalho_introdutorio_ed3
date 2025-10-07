@@ -38,5 +38,8 @@ $(UTILIDADES_O): $(UTILIDADES_C) $(UTILIDADES_H)
 clean:
 	rm -f ./objects/*.o $(TARGET)
 
+delete:
+	rm -f ./bin/*.bin
+
 run: $(TARGET)
 	$(TARGET)

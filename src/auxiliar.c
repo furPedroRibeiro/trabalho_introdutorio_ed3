@@ -14,7 +14,7 @@ registro* ultimoElemento = NULL;
 //quantidade de pessoas presentes no arquivo de dados
 int quantidadePessoas = 0;
 //contador de byteoffset para auxiliar na criação da lista de indice, o byteoffset deve levar em consideração que existe um cabeçalho no arquivo de dados, que ocupa 16 bytes, portanto o primeiro byteoffset livre é:
-long int byteoffset = 17;
+int64_t byteoffset = 17;
 
 //essa função lê o arquivo csv e monta a lista ligada definida em auxiliar.h
 void lerCSV(const char *nomeArquivoEntrada){
@@ -38,17 +38,17 @@ void lerCSV(const char *nomeArquivoEntrada){
     //print pra ver se deu certo:
     //printf("%s", bufferLinha);
     //contador de tamanho de registro, tem no mínimo 21 bytes por registro por causa dos campos de tamanho fixo
-    long int tamRegistroBytes = 21;
+    int64_t tamRegistroBytes = 21;
     //removendo \n do fim da string
     bufferLinha[strcspn(bufferLinha, "\n")] = '\0';
 
     //criando ponteiro que aponta para o buffer que armazena a linha
-    char *str = bufferLinha; 
+    char *str = bufferLinha;
 
     //a partir daqui a leitura dos campos é feita usando a função meu_strsep, explicada e declarada em auxiliar.h
     char* campoIdPessoa = meu_strsep(&str, ",");  //a leitura de um campo é feita observando o conteúdo de str, ou seja, a string que está em buffer linha    
-    char* campoNomePessoa = meu_strsep(&str, ",");    
-    char* campoIdadePessoa = meu_strsep(&str, ",");   
+    char* campoNomePessoa = meu_strsep(&str, ",");
+    char* campoIdadePessoa = meu_strsep(&str, ",");
     char* campoNomeUsuario = meu_strsep(&str, ",");
 
       
@@ -63,7 +63,7 @@ void lerCSV(const char *nomeArquivoEntrada){
     criarNoRegistroIndice(novoRegistroIndice, campoIdPessoa, byteoffset);
 
     //atualizando byteoffset de modo que o próximo byteoffset livre seja depois do registro que acabou de ser inserido 
-    byteoffset += raizLista->tamRegistro;
+    byteoffset += ultimoElemento->tamRegistro;
     //a raíz da lista sempre vai ser o elemento que acabou de ser inserido, então faz sentido pegar o tamanho desse registro para atualizar byteoffset
   
     //atualiza a quantidade de pessoas
@@ -76,12 +76,12 @@ void lerCSV(const char *nomeArquivoEntrada){
 
 //essa função cria o nó e adiciona esse nó novo a lista encadeada de registros do arquivo de dados
 void criarNoRegistro(registro* novoRegistro, char *campoIdPessoa, char *campoIdadePessoa, char *campoNomePessoa, char *campoNomeUsuario, int tamRegistroBytes){
-  //definindo id
+  //definindo id, não precisa de tratamento pois id não pode ser nulo
   novoRegistro->idPessoa = atoi(campoIdPessoa);
   
   //definindo idade da pessoa
   if(campoIdadePessoa == NULL || campoIdadePessoa[0] == '\0'){
-    novoRegistro->idadePessoa = 0;
+    novoRegistro->idadePessoa = -1;
   } else{
     novoRegistro->idadePessoa = atoi(campoIdadePessoa);
   }
@@ -95,6 +95,8 @@ void criarNoRegistro(registro* novoRegistro, char *campoIdPessoa, char *campoIda
     tamRegistroBytes += strlen(campoNomePessoa);
   } else{
     strcpy(novoRegistro->nome, "");
+    novoRegistro->tamanhoNomePessoa = 0;
+    tamRegistroBytes += 0;
   }
 
   //definindo nome de usuário da pessoa
@@ -106,6 +108,8 @@ void criarNoRegistro(registro* novoRegistro, char *campoIdPessoa, char *campoIda
     tamRegistroBytes += strlen(campoNomeUsuario);
   } else{
     strcpy(novoRegistro->nomeUsuario, "");
+    novoRegistro->tamanhoNomeUsuario = 0;
+    tamRegistroBytes += 0;
   }
 
   //caso para a raiz da lista ser nula
@@ -121,7 +125,7 @@ void criarNoRegistro(registro* novoRegistro, char *campoIdPessoa, char *campoIda
 
   //definindo dados que não são lidos do csv
   novoRegistro->removido[0] = '0'; // 0 é não removido
-  novoRegistro->tamRegistro = tamRegistroBytes; 
+  novoRegistro->tamRegistro = tamRegistroBytes;
   novoRegistro->proxRegistro = NULL; //insere o novo registro na raíz da lista
   ultimoElemento->proxRegistro = novoRegistro;
   ultimoElemento = novoRegistro; 
@@ -129,7 +133,7 @@ void criarNoRegistro(registro* novoRegistro, char *campoIdPessoa, char *campoIda
 }
 
 //essa função cria e adiciona um nó novo a lista duplamente encadeada de registros do arquivo de índice
-void criarNoRegistroIndice(indice* novoRegistroIndice, char *campoIdPessoa, long int byteoffset){
+void criarNoRegistroIndice(indice* novoRegistroIndice, char *campoIdPessoa, int64_t byteoffset){
   novoRegistroIndice->idPessoa = atoi(campoIdPessoa);
   novoRegistroIndice->byteOffset = byteoffset;
   //a inserção será ordenada, então começamos com um ponteiro auxiliar que aponta para a raiz da lista
@@ -228,6 +232,6 @@ int retornaQuantidadePessoas(){
 }
 
 //função que retorna o próximo byteoffset disponível
-long int retornaProxByteOffset(){
+int64_t retornaProxByteOffset(){
   return byteoffset;
 }
