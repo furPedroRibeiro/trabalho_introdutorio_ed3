@@ -35,9 +35,9 @@ typedef struct indice{
 //FUNÇÃO DE LER O ARQUIVO CSV
 void lerCSV(char *nomeArquivoEntrada, char *nomeArquivoDados, char *nomeArquivoIndice);
 //função para criar o cabeçalho do arquivo de dados, se der errado retorna 0
-int criaCabecalhoArquivoDados(char* nomeArquivoDados, char* status, int quantidadePessoas, int quantidadeRemovidos, int64_t proxByteoffset);
+void criaCabecalhoArquivoDados(char* nomeArquivoDados, char status, int quantidadePessoas, int quantidadeRemovidos, int64_t proxByteoffset);
 //função para inserir um registro no arquivo de dados, se der errado retorna 0
-int insereRegistro(registro* novoRegistro, char* nomeArquivoDados, int quantidadePessoas, int quantidadeRemovidos, int64_t proxByteoffset);
+void insereRegistro(registro* novoRegistro, char* nomeArquivoDados, int quantidadePessoas, int quantidadeRemovidos, int64_t proxByteoffset);
 //função para inserir os registros de índice no arquivo de índice
 void insereRegistroIndice(indice* raizListaIndice, char* nomeArquivoIndice);
 //FUNÇÃO PARA CRIAR UM NÓ DE REGISTRO E ADICIONÁ-LO A LISTA DE REGISTROS, ESSA FUNÇÃO É CHAMADA DENTRO DE LERCSV()

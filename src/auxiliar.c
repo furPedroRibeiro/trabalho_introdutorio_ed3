@@ -109,7 +109,7 @@ void lerCSV(char *nomeArquivoEntrada, char *nomeArquivoDados, char *nomeArquivoI
 }
 
 //função que cria cabeçalho do arquivo de dados
-void criaCabecalhoArquivoDados(char* nomeArquivoDados, char* status, int quantidadePessoas, int quantidadeRemovidos, int64_t proxByteoffset){
+void criaCabecalhoArquivoDados(char* nomeArquivoDados, char status, int quantidadePessoas, int quantidadeRemovidos, int64_t proxByteoffset){
   //aqui o arquivo de dados é criado e o cabeçalho é definido com os dados iniciais
   char caminho[100] = "./";
   strcat(caminho, nomeArquivoDados);
