@@ -46,7 +46,7 @@ clean:
 	rm -f ./objects/*.o $(TARGET)
 
 delete:
-	rm -f ./bin/*.bin
+	rm -f ./*.bin
 
 run: $(TARGET)
 	$(TARGET)
