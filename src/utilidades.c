@@ -16,7 +16,7 @@ void binarioNaTela(char *nomeArquivoBinario){
 	unsigned char *mb;
 	size_t fl;
 	FILE *fs;
-	char caminho[100] = "./bin/";
+	char caminho[100] = "./";
 	strcat(caminho, nomeArquivoBinario);
 	if(nomeArquivoBinario == NULL || !(fs = fopen(caminho, "rb"))) {
 		fprintf(stderr, "ERRO AO ESCREVER O BINARIO NA TELA (função binarioNaTela): não foi possível abrir o arquivo que me passou para leitura. Ele existe e você tá passando o nome certo? Você lembrou de fechar ele com fclose depois de usar?\n");
