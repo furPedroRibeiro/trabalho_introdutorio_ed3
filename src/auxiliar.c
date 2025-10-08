@@ -27,29 +27,6 @@ void lerCSV(char *nomeArquivoEntrada, char *nomeArquivoDados, char *nomeArquivoI
   //criando buffer para ler uma linha do arquivo
   char bufferLinha[1024];
 
-  //vamos testar se o arquivo de dados será criado corretamente:
-  char caminho[100] = "./";
-  strcat(caminho, nomeArquivoDados);
-  //cria e abre arquivo pra escrita
-  FILE* arqDados = fopen(caminho, "wb");
-  if(arqDados == NULL){
-    puts("Falha no processamento do arquivo.");
-    return;
-  } else{
-    fclose(arqDados);
-  }
-  //agora testando se o arquivo de índice existe:
-  char caminho_1[100] = "./";
-  strcat(caminho_1, nomeArquivoIndice);
-  //cria e abre arquivo pra escrita
-  FILE* arqIndice = fopen(caminho_1, "ab");
-  if(arqIndice == NULL){
-    puts("Falha no processamento do arquivo.");
-    return;
-  } else{
-    fclose(arqIndice);
-  }
-  
   //precisamos abrir o arquivo csv para leitura
   char caminho_2[] = "./dados.csv";
   FILE *arqEntrada = fopen(caminho_2, "r");
@@ -88,8 +65,7 @@ void lerCSV(char *nomeArquivoEntrada, char *nomeArquivoDados, char *nomeArquivoI
     registro* novoRegistro = calloc(1, sizeof(registro));
     //INSERÇÃO NA LISTA DE REGISTROS: chama função
     criarNoRegistro(novoRegistro, campoIdPessoa, campoIdadePessoa, campoNomePessoa, campoNomeUsuario, tamRegistroBytes);
-    //inicializando cabeçalho do arquivo de dados:
-    criaCabecalhoArquivoDados(nomeArquivoDados, status, quantidadePessoas, quantidadeRemovidos, proxByteoffset);
+
     //agora é preciso fazer uma inserção no arquivo de dados, para cada leitura é necessário fazer uma inserção no arquivo de dados
     insereRegistro(novoRegistro, nomeArquivoDados, quantidadePessoas, quantidadeRemovidos, proxByteoffset);
 
@@ -100,16 +76,17 @@ void lerCSV(char *nomeArquivoEntrada, char *nomeArquivoDados, char *nomeArquivoI
     //INSERÇÃO NA LISTA DE ÍNDICE: chama função
     criarNoRegistroIndice(novoRegistroIndice, campoIdPessoa, byteoffsetAtual);
   }
-
   //acabou a leitura do arquivo e a inserção de registros no arquivo de dados, agora é necessário fazer a inserção no arquivo de índice. A lista de índices já estará ordenada e com os byteoffsets certos, já que fizemos uma inserção a cada leitura
   //o arquivo csv pode ser fechado:
   fclose(arqEntrada);
 
   insereRegistroIndice(raizListaIndice, nomeArquivoIndice);
+
+  //função acabou
 }
 
 //função que cria cabeçalho do arquivo de dados
-void criaCabecalhoArquivoDados(char* nomeArquivoDados, char status, int quantidadePessoas, int quantidadeRemovidos, int64_t proxByteoffset){
+void criaCabecalhoArquivoDados(char* nomeArquivoDados, char status, int quantidadePessoas, int quantidadeRemovidos, int64_t proxByteoffsetAtual){
   //aqui o arquivo de dados é criado e o cabeçalho é definido com os dados iniciais
   char caminho[100] = "./";
   strcat(caminho, nomeArquivoDados);
@@ -125,28 +102,28 @@ void criaCabecalhoArquivoDados(char* nomeArquivoDados, char status, int quantida
   tamCabecalho += sizeof(int);
   fwrite(&quantidadeRemovidos, sizeof(int), 1, arqDados);
   tamCabecalho += sizeof(int);
-  fwrite(&proxByteoffset, sizeof(int64_t), 1, arqDados);
+  fwrite(&proxByteoffsetAtual, sizeof(int64_t), 1, arqDados);
   tamCabecalho += sizeof(int64_t);
 
   fclose(arqDados);
 }
 
 //função para inserir um registro no arquivo de dados
-void insereRegistro(registro* novoRegistro, char* nomeArquivoDados, int quantidadePessoas, int quantidadeRemovidos, int64_t proxByteoffset){
+void insereRegistro(registro* novoRegistro, char* nomeArquivoDados, int quantidadePessoas, int quantidadeRemovidos, int64_t proxByteoffsetAtual){
   //a cada inserção, o cabeçalho é atualizado com a quantidade de pessoas, o número de pessoas removidas e o próximo byte offset disponível, além disso, o status é definido pra 1 no começo da inserção para indicar que o arquivo está inconsistente e depois da inserção ele é 0 para mostrar que está consistente
 
   //o arquivo já foi criado com o cabeçalho, então nos resta apenas abrir para escrita no fim do arquivo
   char caminho[100] = "./";
   strcat(caminho, nomeArquivoDados);
-  FILE* arqDados = fopen(caminho, "ab");
+  FILE* arqDados = fopen(caminho, "r+b");
 
   //primeiro já vamos reescrever o status para 0
   char statusInconsistente = '0';
   fseek(arqDados, 0, SEEK_SET);
-  fwrite(&status, sizeof(char), 1, arqDados);
+  fwrite(&statusInconsistente, sizeof(char), 1, arqDados);
 
   //agora reposicionamos o ponteiro do arquivo para escrever o registro, aproveitando que proxByteOffset ainda não foi atualizado
-  fseek(arqDados, proxByteoffset, SEEK_SET);
+  fseek(arqDados, proxByteoffsetAtual, SEEK_SET);
 
   //inserção:
   int tamanhoRegistro = novoRegistro->tamRegistro;
@@ -174,11 +151,10 @@ void insereRegistro(registro* novoRegistro, char* nomeArquivoDados, int quantida
     fwrite(nomeUsuario, sizeof(char), tamNomeUsuario, arqDados);
   }
 
-  //atualizando byteoffset de modo que o próximo byteoffset livre seja depois do registro que acabou de ser inserido 
+  //atualizando byteoffset de modo que o próximo byteoffset livre seja depois do registro que acabou de ser inserido
   proxByteoffset += novoRegistro->tamRegistro;
   //agora devemos atualizar o registro de cabeçalho:
   quantidadePessoas++;
-  quantidadeRemovidos = 0;
   //movendo ponteiro do arquivo para o byte 1:
   fseek(arqDados, 1, SEEK_SET);
   //para atualizar a quantidade de pessoas, vamos escrever um inteiro
@@ -277,7 +253,7 @@ void criarNoRegistro(registro* novoRegistro, char *campoIdPessoa, char *campoIda
   //definindo dados que não são lidos do csv
   novoRegistro->removido[0] = '0'; // 0 é não removido
   novoRegistro->tamRegistro = tamRegistroBytes;
-  novoRegistro->proxRegistro = NULL; //insere o novo registro na raíz da lista
+  novoRegistro->proxRegistro = NULL; 
   ultimoElemento->proxRegistro = novoRegistro;
   ultimoElemento = novoRegistro; 
 

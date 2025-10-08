@@ -71,6 +71,8 @@ void criarArquivoDados(char *nomeArquivoEntrada, char *nomeArquivoDados, char *n
   if(arqEntrada == NULL){
     puts("Falha no processamento do arquivo.");
     return;
+  } else{
+    fclose(arqEntrada);
   }
 
   //chama uma função para criar uma estrutura de dados com todos os registros do arquivo de entrada, e cria também a estrutura de dados do indice. A função já faz as inserções no arquivo de dados e no arquivo de índice
