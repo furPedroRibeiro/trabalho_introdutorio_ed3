@@ -33,19 +33,17 @@ typedef struct indice{
 } indice;
 
 //FUNÇÃO DE LER O ARQUIVO CSV
-void lerCSV(const char *nomeArquivoEntrada);
+void lerCSV(char *nomeArquivoEntrada, char *nomeArquivoDados, char *nomeArquivoIndice);
+//função para criar o cabeçalho do arquivo de dados, se der errado retorna 0
+int criaCabecalhoArquivoDados(char* nomeArquivoDados, char* status, int quantidadePessoas, int quantidadeRemovidos, int64_t proxByteoffset);
+//função para inserir um registro no arquivo de dados, se der errado retorna 0
+int insereRegistro(registro* novoRegistro, char* nomeArquivoDados, int quantidadePessoas, int quantidadeRemovidos, int64_t proxByteoffset);
+//função para inserir os registros de índice no arquivo de índice
+void insereRegistroIndice(indice* raizListaIndice, char* nomeArquivoIndice);
 //FUNÇÃO PARA CRIAR UM NÓ DE REGISTRO E ADICIONÁ-LO A LISTA DE REGISTROS, ESSA FUNÇÃO É CHAMADA DENTRO DE LERCSV()
 void criarNoRegistro(registro* novoRegistro, char *campoIdPessoa, char *campoIdadePessoa, char *campoNomePessoa, char *campoNomeUsuario, int tamRegistroBytes);
 //Função para criar um nó e adicioná-lo a lista de registros do arquivo de indice, não retorna nada
 void criarNoRegistroIndice(indice* novoRegistroIndice, char *campoIdPessoa, int64_t byteoffset);
-
-//as funções a seguir retornam apenas as raízes das listas(funções implementadas em auxiliar.c e usadas também por createFiles.c)
-registro* retornaRaizListaRegistro();
-indice* retornaRaizListaIndice();
-
-//funções que retornam dados necessários para construção do cabeçalho
-int retornaQuantidadePessoas();
-int64_t retornaProxByteOffset();
 
 //função strsep aqui(não roda em windows a função strsep definida direto pelo GNU(se não me engano))
 char* meu_strsep(char** , const char* delim);

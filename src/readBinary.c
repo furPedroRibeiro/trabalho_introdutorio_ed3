@@ -10,7 +10,7 @@
 
 void listarRegistros(char *nomeArquivoEntrada){
     // abrindo o caminho em que o arquivo está
-    char caminho_2[100] = "./bin/";
+    char caminho_2[100] = "./";
     strcat(caminho_2, nomeArquivoEntrada);
     // o arquivo pessoa precisa existir, então é aberto para append binary
     FILE *arqPessoa = fopen(caminho_2, "rb");
