@@ -57,7 +57,7 @@ void criarArquivoDados(char *nomeArquivoEntrada, char *nomeArquivoDados, char *n
   char caminho_1[100] = "./";
   strcat(caminho_1, nomeArquivoIndice);
   //cria e abre arquivo pra escrita
-  FILE* arqIndice = fopen(caminho_1, "ab");
+  FILE* arqIndice = fopen(caminho_1, "rb+");
   if(arqIndice == NULL){
     puts("Falha no processamento do arquivo.");
     return;

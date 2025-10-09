@@ -154,6 +154,12 @@ void insereRegistro(registro* novoRegistro, FILE* arquivoDados, int quantidadePe
 }
 
 void insereRegistroIndice(indice* raizListaIndice, FILE* arquivoIndice){
+  //mudando status no cabeçalho:
+  char statusInconsistente = '0';
+  fseek(arquivoIndice, 0, SEEK_SET);
+  fwrite(&statusInconsistente, sizeof(char), 1, arquivoIndice);
+  //volta ponteiro para escrever o primeiro registro de índice
+  fseek(arquivoIndice, 12, SEEK_SET);
   //noAuxiliarIndice para receber a raíz da lista de registros de indice
   indice* noAuxiliarIndice = raizListaIndice;
 
@@ -174,6 +180,10 @@ void insereRegistroIndice(indice* raizListaIndice, FILE* arquivoIndice){
     //atualiza o nó atual
     noAuxiliarIndice = noAuxiliarIndice->proxIndice;
   }
+
+  char statusConsistente = '1';
+  fseek(arquivoIndice, 0, SEEK_SET);
+  fwrite(&statusConsistente, sizeof(char), 1, arquivoIndice);
 
   //fechando arquivo de índice
   fclose(arquivoIndice);
