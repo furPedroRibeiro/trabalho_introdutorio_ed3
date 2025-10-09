@@ -51,18 +51,18 @@ void criarArquivoDados(char *nomeArquivoEntrada, char *nomeArquivoDados, char *n
     puts("Falha no processamento do arquivo.");
     return;
   } else{
-    fclose(arqDados);
+    
   }
   //agora testando se o arquivo de índice existe:
   char caminho_1[100] = "./";
   strcat(caminho_1, nomeArquivoIndice);
   //cria e abre arquivo pra escrita
-  FILE* arqIndice = fopen(caminho_1, "rb");
+  FILE* arqIndice = fopen(caminho_1, "ab");
   if(arqIndice == NULL){
     puts("Falha no processamento do arquivo.");
     return;
   } else{
-    fclose(arqIndice);
+    
   }
   //testando se csv existe
   char caminho_2[] = "./dados.csv";
@@ -72,11 +72,25 @@ void criarArquivoDados(char *nomeArquivoEntrada, char *nomeArquivoDados, char *n
     puts("Falha no processamento do arquivo.");
     return;
   } else{
-    fclose(arqEntrada);
+    
   }
 
   //chama uma função para criar uma estrutura de dados com todos os registros do arquivo de entrada, e cria também a estrutura de dados do indice. A função já faz as inserções no arquivo de dados e no arquivo de índice
-  lerCSV(nomeArquivoEntrada, nomeArquivoDados, nomeArquivoIndice);
+  lerCSV(arqDados, arqIndice, arqEntrada);
+
+  //cria e abre arquivo pra escrita para verificar o byteoffset que está no cabeçalho
+  // FILE* arqDadosLeitura = fopen(caminho, "rb");
+  // if(arqDadosLeitura == NULL){
+  //   puts("Falha no processamento do arquivo.");
+  //   return;
+  // } else{
+    
+  // }
+  // int64_t proxByteoffset;
+  // fseek(arqDadosLeitura, 9, SEEK_SET);
+  // fread(&proxByteoffset, sizeof(int64_t), 1, arqDados);
+  // printf("Próximo Byteoffset disponível: %ld\n", proxByteoffset);
+  // fclose(arqDadosLeitura);
 
   //usa função binário na tela como especificado no trabalho
   binarioNaTela(nomeArquivoDados);
