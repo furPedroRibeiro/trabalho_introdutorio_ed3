@@ -53,6 +53,10 @@ void criarArquivoDados(char *nomeArquivoEntrada, char *nomeArquivoDados, char *n
   } else{
     
   }
+  //primeiro já vamos reescrever o status para 0
+  char statusInconsistente = '0';
+  fseek(arqDados, 0, SEEK_SET);
+  fwrite(&statusInconsistente, sizeof(char), 1, arqDados);
   //agora testando se o arquivo de índice existe:
   char caminho_1[100] = "./";
   strcat(caminho_1, nomeArquivoIndice);
@@ -79,18 +83,24 @@ void criarArquivoDados(char *nomeArquivoEntrada, char *nomeArquivoDados, char *n
   lerCSV(arqDados, arqIndice, arqEntrada);
 
   //cria e abre arquivo pra escrita para verificar o byteoffset que está no cabeçalho
-  // FILE* arqDadosLeitura = fopen(caminho, "rb");
-  // if(arqDadosLeitura == NULL){
-  //   puts("Falha no processamento do arquivo.");
-  //   return;
-  // } else{
+  FILE* arqDadosLeitura = fopen(caminho, "rb");
+  if(arqDadosLeitura == NULL){
+    puts("Falha no processamento do arquivo.");
+    return;
+  } else{
     
-  // }
-  // int64_t proxByteoffset;
-  // fseek(arqDadosLeitura, 9, SEEK_SET);
-  // fread(&proxByteoffset, sizeof(int64_t), 1, arqDados);
-  // printf("Próximo Byteoffset disponível: %ld\n", proxByteoffset);
-  // fclose(arqDadosLeitura);
+  }
+  int64_t proxByteoffset;
+  fseek(arqDadosLeitura, 1, SEEK_SET);
+  int quantidadePessoas = 0;
+  fread(&quantidadePessoas, sizeof(int), 1, arqDados);
+  int quantidadeRemovidos = 0;
+  fread(&quantidadeRemovidos, sizeof(int), 1, arqDados);
+  fread(&proxByteoffset, sizeof(int64_t), 1, arqDados);
+  printf("Proximo Byteoffset disponivel: %ld\n", proxByteoffset);
+  printf("Qtd pessoas: %d\n", quantidadePessoas);
+  printf("Qtd removidos: %d\n", quantidadeRemovidos);
+  fclose(arqDadosLeitura);
 
   //usa função binário na tela como especificado no trabalho
   binarioNaTela(nomeArquivoDados);

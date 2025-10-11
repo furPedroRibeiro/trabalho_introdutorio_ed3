@@ -38,7 +38,7 @@ void lerCSV(FILE* arquivoDados, FILE* arquivoIndice, FILE* arquivoEntrada){
     //declarando variável para obter o byteoffset do registro que será inserido nessa iteração
     int64_t byteoffsetAtual = proxByteoffset;
     //contador de tamanho de registro, tem no mínimo 21 bytes por registro por causa dos campos de tamanho fixo
-    int tamRegistroBytes = 21;
+    int tamRegistroBytes = 16;
     //removendo \n do fim da string
     bufferLinha[strcspn(bufferLinha, "\n")] = '\0';
 
@@ -58,7 +58,7 @@ void lerCSV(FILE* arquivoDados, FILE* arquivoIndice, FILE* arquivoEntrada){
     criarNoRegistro(novoRegistro, campoIdPessoa, campoIdadePessoa, campoNomePessoa, campoNomeUsuario, tamRegistroBytes);
 
     //agora é preciso fazer uma inserção no arquivo de dados, para cada leitura é necessário fazer uma inserção no arquivo de dados
-    insereRegistro(novoRegistro, arquivoDados, quantidadePessoas, quantidadeRemovidos, proxByteoffset);
+    insereRegistro(novoRegistro, arquivoDados, quantidadeRemovidos, proxByteoffset);
 
     //depois que o registro é inserido, podemos adicionar um nó para o índice na lista de índice, que vai ser criada inteira antes de adicionarmos ela para o arquivo de índice
 
@@ -70,6 +70,11 @@ void lerCSV(FILE* arquivoDados, FILE* arquivoIndice, FILE* arquivoEntrada){
   //acabou a leitura do arquivo e a inserção de registros no arquivo de dados, agora é necessário fazer a inserção no arquivo de índice. A lista de índices já estará ordenada e com os byteoffsets certos, já que fizemos uma inserção a cada leitura
   //o arquivo csv pode ser fechado:
   fclose(arquivoEntrada);
+  //com o cabeçalho todo reescrito e todos os registros cadastrados, basta atualizar o status novamente para 1, que é consistente
+  char statusConsistente = '1';
+  fseek(arquivoDados, 0, SEEK_SET);
+  fwrite(&statusConsistente, sizeof(char), 1, arquivoDados);
+
   fclose(arquivoDados);
 
   insereRegistroIndice(raizListaIndice, arquivoIndice);
@@ -95,13 +100,8 @@ void criaCabecalhoArquivoDados(FILE* arquivoDados, char status, int quantidadePe
 }
 
 //função para inserir um registro no arquivo de dados
-void insereRegistro(registro* novoRegistro, FILE* arquivoDados, int quantidadePessoas, int quantidadeRemovidos, int64_t proxByteoffsetAtual){
+void insereRegistro(registro* novoRegistro, FILE* arquivoDados, int quantidadeRemovidos, int64_t proxByteoffsetAtual){
   //a cada inserção, o cabeçalho é atualizado com a quantidade de pessoas, o número de pessoas removidas e o próximo byte offset disponível, além disso, o status é definido pra 1 no começo da inserção para indicar que o arquivo está inconsistente e depois da inserção ele é 0 para mostrar que está consistente
-
-  //primeiro já vamos reescrever o status para 0
-  char statusInconsistente = '0';
-  fseek(arquivoDados, 0, SEEK_SET);
-  fwrite(&statusInconsistente, sizeof(char), 1, arquivoDados);
 
   //agora reposicionamos o ponteiro do arquivo para escrever o registro, aproveitando que proxByteOffset ainda não foi atualizado
   fseek(arquivoDados, proxByteoffsetAtual, SEEK_SET);
@@ -133,7 +133,7 @@ void insereRegistro(registro* novoRegistro, FILE* arquivoDados, int quantidadePe
   }
 
   //atualizando byteoffset de modo que o próximo byteoffset livre seja depois do registro que acabou de ser inserido
-  proxByteoffset += novoRegistro->tamRegistro;
+  proxByteoffset += novoRegistro->tamRegistro+5;
   //agora devemos atualizar o registro de cabeçalho:
   quantidadePessoas++;
   //movendo ponteiro do arquivo para o byte 1:
@@ -142,10 +142,7 @@ void insereRegistro(registro* novoRegistro, FILE* arquivoDados, int quantidadePe
   fwrite(&quantidadePessoas, sizeof(int), 1, arquivoDados);
   fwrite(&quantidadeRemovidos, sizeof(int), 1, arquivoDados);
   fwrite(&proxByteoffset, sizeof(int64_t), 1, arquivoDados);
-  //com o cabeçalho todo reescrito e o registro novo cadastrado, basta atualizar o status novamente para 1 e depois posicionar o ponteiro do arquivo para a próxima inserção:
-  char statusConsistente = '1';
-  fseek(arquivoDados, 0, SEEK_SET);
-  fwrite(&statusConsistente, sizeof(char), 1, arquivoDados);
+  
   if(novoRegistro->proxRegistro != NULL){
     fseek(arquivoDados, proxByteoffset, SEEK_SET);
   } else if(novoRegistro->proxRegistro == NULL){
