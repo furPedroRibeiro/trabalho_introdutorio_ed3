@@ -17,8 +17,12 @@ struct registro2 {
     char nomeUsuario[100];
 } reg;
 
-//função de listar todos os registros, é a funcionalidade 3 do trabalho e tem como objetivo listar todos os registros do arquivo de dados
+// Função para listar todos os registros (funcionalidade 3)
 void listarRegistros(char *nomeArquivoEntrada);
+// Função para buscar registros (funcionalidade 4)
+void buscarregistros(char *nomeArquivoPessoa, char *nomeArquivoIndice, int n);
+// Função auxiliar para imprimir um registro
+void imprimirRegistro(int idPessoa, int idadePessoa, int tamNomePessoa, char *nomePessoa, int tamNomeUsuario, char *nomeUsuario);
 
 
 #endif
