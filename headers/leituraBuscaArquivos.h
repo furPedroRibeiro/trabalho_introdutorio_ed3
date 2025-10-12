@@ -12,5 +12,4 @@
 void listarRegistros(char *nomeArquivoEntrada);
 void buscarRegistros(char *nomeArquivoPessoa, char *nomeArquivoIndice, int n);
 
-
 #endif

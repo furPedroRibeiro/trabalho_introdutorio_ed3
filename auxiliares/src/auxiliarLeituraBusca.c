@@ -3,8 +3,6 @@
 
 #include "../headers/auxiliarLeituraBusca.h"
 
-struct registro_2 reg;
-
 // Funcao auxiliar para imprimir um registro
 void imprimirRegistro(int idPessoa, int idadePessoa, int tamNomePessoa, char *nomePessoa, int tamNomeUsuario, char *nomeUsuario){
     printf("Dados da pessoa de codigo %d\n", idPessoa);
@@ -49,7 +47,7 @@ int64_t buscaBinariaIndice(indice *vetor, int tamanho, int idBuscado){
 }
 
 //imprimir registro encontrado por byteOffset
-void imprimirRegistroPorByteOffset(FILE *arqPessoa, int64_t byteOffset){
+void imprimirRegistroPorByteOffset(FILE *arqPessoa, int64_t byteOffset, struct registro_2 reg){
     fseek(arqPessoa, byteOffset, SEEK_SET);
 
     char removido;

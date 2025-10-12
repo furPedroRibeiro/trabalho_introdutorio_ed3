@@ -1,7 +1,6 @@
 //Aluno 1: Pedro Luis de Alencar Ribeiro N° USP: 15590852
 //Aluno 2: Bianca Duarte Batista Lacerda N° USP: 15443221
 
-//esse arquivo de cabeçalho .h tem como essência definir as funções, variáveis, etc. que podem ser usadas e implementadas por todos os arquivos .c, portanto são funções, estruturas de dados e variáveis auxiliares
 #ifndef AUXILIAR_LEITURA_H
 #define AUXILIAR_LEITURA_H
 
@@ -11,7 +10,7 @@
 #include <stdint.h>
 #include <string.h>
 
-// Estrutura auxiliar para armazenar os campos de um registro(usada para a funcionalidade 3)
+// Estrutura auxiliar para armazenar os campos de um registro(usada para a funcionalidade 3 e 4)
 struct registro_2 {
     int idPessoa, idadePessoa;
     int tamNomePessoa, tamNomeUsuario;
@@ -28,6 +27,6 @@ typedef struct indice{
 
 void imprimirRegistro(int idPessoa, int idadePessoa, int tamNomePessoa, char *nomePessoa, int tamNomeUsuario, char *nomeUsuario);
 int64_t buscaBinariaIndice(indice *vetor, int tamanho, int idBuscado);
-void imprimirRegistroPorByteOffset(FILE *arqPessoa, int64_t byteOffset);
+void imprimirRegistroPorByteOffset(FILE *arqPessoa, int64_t byteOffset, struct registro_2 reg);
 
 #endif

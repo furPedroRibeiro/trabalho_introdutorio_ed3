@@ -1,7 +1,6 @@
 // Aluno 1: Pedro Luis de Alencar Ribeiro N° USP: 15590852
 // Aluno 2: Bianca Duarte Batista Lacerda N° USP: 15443221
 
-//readBinary.c tem como principal função usar e implementar funções e variáveis definidas em readBinary.h e algumas outras funções e variáveis vindas de outros arquivos
 //nesse arquivo estão as funcionalidades 3 e 4, que dizem respeito a busca nos arquivos de índice e de dados
 
 //incluindo arquivos de cabeçalho utilizados nesse arquivo de implementação
@@ -11,6 +10,8 @@
 
 // Definição da variável global
 struct registro_2 reg;
+//aproveitando a struct que ja foi criada em auxiliar.h
+typedef struct indice indice;
 
 //Funcionalidade 3:
 void listarRegistros(char *nomeArquivoEntrada){
@@ -59,7 +60,7 @@ void listarRegistros(char *nomeArquivoEntrada){
         int tamRegistro;
         fread(&tamRegistro, sizeof(int), 1, arqPessoa);
         if(removido == '1'){
-            fseek(arqPessoa, tamRegistro-5, SEEK_CUR);
+            fseek(arqPessoa, tamRegistro, SEEK_CUR);
             continue;
         }
         // Lê cada campo do registro
@@ -80,19 +81,16 @@ void listarRegistros(char *nomeArquivoEntrada){
     fclose(arqPessoa);
 }
 
-//aproveitando a struct que ja foi criada em auxiliar.h
-typedef struct indice indice;
-
 //funcionalidade 4
 void buscarRegistros(char *nomeArquivoPessoa, char *nomeArquivoIndice, int n){
     // Abertura dos arquivos
-    char caminho_2[100] = "./";
-    strcat(caminho_2, nomeArquivoPessoa);
-    FILE *arqPessoa = fopen(caminho_2, "rb");
+    char caminho[100] = "./";
+    strcat(caminho, nomeArquivoPessoa);
+    FILE *arqPessoa = fopen(caminho, "rb");
 
-    char caminho_3[100] = "./";
-    strcat(caminho_3, nomeArquivoIndice);
-    FILE *arquivoIndice = fopen(caminho_3, "rb");
+    char caminho_2[100] = "./";
+    strcat(caminho_2, nomeArquivoIndice);
+    FILE *arquivoIndice = fopen(caminho_2, "rb");
 
     if(arqPessoa == NULL || arquivoIndice == NULL){
         puts("Falha no processamento do arquivo.");
@@ -131,7 +129,7 @@ void buscarRegistros(char *nomeArquivoPessoa, char *nomeArquivoIndice, int n){
 
         // lê a linha de busca no formato: número nomeCampo=valorCampo
         scanf("%d", &entrada);
-        scanf("%[^=]", nomeCampo);
+        scanf(" %[^=]", nomeCampo);
         getchar(); // consome '='
         scan_quote_string(valorCampo);
 
@@ -140,7 +138,7 @@ void buscarRegistros(char *nomeArquivoPessoa, char *nomeArquivoIndice, int n){
             int idBusca = atoi(valorCampo);
             int64_t offset = buscaBinariaIndice(vetorIndice, qtdIndice, idBusca);
             if(offset != -1){
-                imprimirRegistroPorByteOffset(arqPessoa, offset);
+                imprimirRegistroPorByteOffset(arqPessoa, offset, reg);
                 find = 1;
             }
         } 
@@ -157,7 +155,7 @@ void buscarRegistros(char *nomeArquivoPessoa, char *nomeArquivoIndice, int n){
                 
                 //pula os registros removidos
                 if(removido == '1'){
-                    fseek(arqPessoa, tamRegistro - 5, SEEK_CUR);
+                    fseek(arqPessoa, tamRegistro, SEEK_CUR);
                     continue;
                 }
 
@@ -165,20 +163,24 @@ void buscarRegistros(char *nomeArquivoPessoa, char *nomeArquivoIndice, int n){
                 fread(&reg.idPessoa, sizeof(int), 1, arqPessoa);
                 fread(&reg.idadePessoa, sizeof(int), 1, arqPessoa);
                 fread(&reg.tamNomePessoa, sizeof(int), 1, arqPessoa);
-                fread(reg.nomePessoa, sizeof(char), reg.tamNomePessoa, arqPessoa);
-                reg.nomePessoa[reg.tamNomePessoa] = '\0';
+                if(reg.tamNomePessoa > 0){
+                    fread(reg.nomePessoa, sizeof(char), reg.tamNomePessoa, arqPessoa);
+                    reg.nomePessoa[reg.tamNomePessoa] = '\0';
+                } else {
+                    reg.nomePessoa[0] = '\0';
+                }
                 fread(&reg.tamNomeUsuario, sizeof(int), 1, arqPessoa);
                 fread(reg.nomeUsuario, sizeof(char), reg.tamNomeUsuario, arqPessoa);
                 reg.nomeUsuario[reg.tamNomeUsuario] = '\0';
 
-                if ((strcmp(nomeCampo, "idade") == 0 && reg.idadePessoa == atoi(valorCampo)) ||
-                    (strcmp(nomeCampo, "nomePessoa") == 0 && strcmp(reg.nomePessoa, valorCampo) == 0) ||
-                    (strcmp(nomeCampo, "nomeUsuario") == 0 && strcmp(reg.nomeUsuario, valorCampo) == 0)) {
-                    
+                if ((strcmp(nomeCampo, "idade") == 0 && reg.idadePessoa == atoi(valorCampo)) || (strcmp(nomeCampo, "idadePessoa") == 0 && reg.idadePessoa == atoi(valorCampo)) || (strcmp(nomeCampo, "nomePessoa") == 0 && strcmp(reg.nomePessoa, valorCampo) == 0) || (strcmp(nomeCampo, "nomeUsuario") == 0 && strcmp(reg.nomeUsuario, valorCampo) == 0)) {
                     imprimirRegistro(reg.idPessoa, reg.idadePessoa, reg.tamNomePessoa, reg.nomePessoa, reg.tamNomeUsuario, reg.nomeUsuario);
                     find = 1;
                 }
             }
+        }
+        if(find == 0){
+        printf("Registro inexistente.\n\n");
         }
     }
 
