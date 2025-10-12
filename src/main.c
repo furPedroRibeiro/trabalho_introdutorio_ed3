@@ -67,6 +67,14 @@ int main(){
       listarRegistros(nomeArquivoEntrada);
       break;
     case 4:
+    //obtem o nome do arquivo de entrada passado como parametro
+      nomeArquivoEntrada = strtok(NULL, " ");
+      //obtem o nome do arquivo de indice passado como parametro
+      nomeArquivoIndice = strtok(NULL, " ");
+      //obtem o parametro n
+      parametro = strtok(NULL, " ");
+      int n = atoi(parametro);
+      buscarregistros(nomeArquivoEntrada, nomeArquivoIndice, n);
       break;
     //caso o usuário digite alguma opção que não é de 1 a 4
     default: 
