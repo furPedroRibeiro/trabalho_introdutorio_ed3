@@ -252,9 +252,6 @@ void buscarregistros(char *nomeArquivoPessoa, char *nomeArquivoIndice, int n){
                 }
             }
         }
-        if (!find){
-            puts("Registro inexistente.");
-        }
     }
 
     free(vetorIndice);
