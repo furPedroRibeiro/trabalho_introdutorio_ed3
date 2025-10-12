@@ -55,10 +55,11 @@ void criarArquivoDados(char *nomeArquivoEntrada, char *nomeArquivoDados, char *n
   char statusInconsistente = '0';
   fseek(arqDados, 0, SEEK_SET);
   fwrite(&statusInconsistente, sizeof(char), 1, arqDados);
+
   //agora testando se o arquivo de índice existe:
   char caminho_1[100] = "./";
   strcat(caminho_1, nomeArquivoIndice);
-  //cria e abre arquivo pra escrita
+  //abre arquivo pra escrita permitindo fopen
   FILE* arqIndice = fopen(caminho_1, "rb+");
   if(arqIndice == NULL){
     puts("Falha no processamento do arquivo.");

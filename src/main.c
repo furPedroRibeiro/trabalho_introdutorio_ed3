@@ -4,6 +4,8 @@
 #include "../headers/criarArquivos.h"
 #include "../headers/leituraBuscaArquivos.h"
 
+//aqui roda a main, que lê a entrada e depois roda um switch case para selecionar a funcionalidade a ser executada
+
 int main(){
   //variáveis que podem ser usadas para chamadas e execução de funções:
   //guarda o ponteiro para o nome de arquivo de entrada
@@ -23,15 +25,15 @@ int main(){
   int i = 0;
   char bufferEntrada[1024];
 
-  // lê até EOF, \0 ou \n — cobre todos os casos possíveis
+  // lê até EOF, \0 ou \n — cobre todos os casos possíveis porque a entrada no runcodes é de um jeito e pelo teclado para testes é de outro, então ao invés de usar fgets fizemos a adaptação para todos os tipos de terminação de entrada
   while ((c = getchar()) != EOF && c != '\0' && c != '\n') {
       if (i < sizeof(bufferEntrada) - 1) {
         bufferEntrada[i++] = c;
       } else {
-        break; // evita estouro de buffer
+        break; // evita estouro de buffer(seg fault)
       }
   }
-  bufferEntrada[i] = '\0';
+  bufferEntrada[i] = '\0'; //coloca o \0 no fim da entrada para usar strtok corretamente
 
 
   //salvando primeiro parâmetro da entrada
@@ -48,6 +50,7 @@ int main(){
       criarIndice(nomeArquivoIndice);
 
       break;
+    //funcionalidade 2: faz a leitura do arquivo csv, atualiza o arquivo de índice e e cria o arquivo binário de dados 
     case 2:
       //obtem o nome do arquivo de entrada passado como parametro
       nomeArquivoEntrada = strtok(NULL, " ");
@@ -60,6 +63,7 @@ int main(){
       criarArquivoDados(nomeArquivoEntrada, nomeArquivoSaida, nomeArquivoIndice);
 
       break;
+    //funcionalidade 3: printa na tela todos os registros que vão ser lidos do arquivo de dados
     case 3: 
       //obtem o nome do arquivo de entrada passado como parametro
       nomeArquivoEntrada = strtok(NULL, " ");

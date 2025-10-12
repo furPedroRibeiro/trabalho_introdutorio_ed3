@@ -3,6 +3,8 @@
 
 #include "../headers/utilidades.h"
 
+//arquivo disponibilizado no runcodes pela professora
+
 /*
 Função para imprimir dados salvos no arquivo em binário
 (util para comparar saida no run codes)

@@ -13,7 +13,7 @@ registro* ultimoElemento = NULL;
 
 //definindo variáveis para o cabeçalho do arquivo de dados
 //abriremos o arquivo com status consistente
-char status = '1';
+char status = '0';
 //contador da quantidade de pessoas presentes no arquivo de dados
 int quantidadePessoas = 0;
 //contador da quantidade de pessoas removidas no arquivo de dados
@@ -30,7 +30,7 @@ void lerCSV(FILE* arquivoDados, FILE* arquivoIndice, FILE* arquivoEntrada){
   //fgets para ignorar a primeira linha do arquivo csv, que contém os nomes dos campos
   fgets(bufferLinha, sizeof(bufferLinha), arquivoEntrada);
 
-  //função para criar definir o cabeçalho do arquivo de dados é chamada antes da leitura começar
+  //função para definir o cabeçalho do arquivo de dados é chamada antes da leitura começar
   criaCabecalhoArquivoDados(arquivoDados, status, quantidadePessoas, quantidadeRemovidos, proxByteoffset);
 
   //aqui começa a leitura a partir da segunda linha do arquivo de dados
