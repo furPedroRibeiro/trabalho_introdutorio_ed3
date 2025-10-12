@@ -7,6 +7,10 @@
 //incluindo arquivos de cabeçalho utilizados nesse arquivo de implementação
 #include "../headers/readBinary.h"
 #include "../headers/auxiliar.h"
+#include "../headers/utilidades.h"
+
+// Definição da variável global
+struct registro2 reg;
 
 // Funcao auxiliar para imprimir um registro
 void imprimirRegistro(int idPessoa, int idadePessoa, int tamNomePessoa, char *nomePessoa, int tamNomeUsuario, char *nomeUsuario){
@@ -130,7 +134,9 @@ void imprimirRegistroPorByteOffset(FILE *arqPessoa, int64_t byteOffset){
 
     char removido;
     fread(&removido, sizeof(char), 1, arqPessoa);
-    if (removido == '1') return; // registro removido
+    if (removido == '1'){
+        return; // registro marcado como removido
+    }
 
     int tamRegistro;
     fread(&tamRegistro, sizeof(int), 1, arqPessoa);
@@ -151,6 +157,7 @@ void imprimirRegistroPorByteOffset(FILE *arqPessoa, int64_t byteOffset){
 
 //função principal da funcionalidade 4
 void buscarregistros(char *nomeArquivoPessoa, char *nomeArquivoIndice, int n){
+    // Abertura dos arquivos
     char caminho_2[100] = "./";
     strcat(caminho_2, nomeArquivoPessoa);
     FILE *arqPessoa = fopen(caminho_2, "rb");
@@ -190,19 +197,15 @@ void buscarregistros(char *nomeArquivoPessoa, char *nomeArquivoIndice, int n){
 
     //loop de buscas
     for(int i = 0; i < n; i++){
-        char entrada[100];
-        char nomeCampo[100];
-        char valorCampo[100];
-
-        scanf("%s", entrada);
-
-        //separa o campo e o valor
-        char *igual = strchr(entrada, '=');
-        *igual = '\0';
-        strcpy(nomeCampo, entrada);
-        strcpy(valorCampo, igual + 1);
-
+        int entrada;
+        char nomeCampo[100], valorCampo[100];
         int find = 0;
+
+        // lê a linha de busca no formato: número nomeCampo=valorCampo
+        scanf("%d", &entrada);
+        scanf("%[^=]", nomeCampo);
+        getchar(); // consome '='
+        scan_quote_string(valorCampo);
 
         //caso 1:busca por idPessoa usando indice
         if(strcmp(nomeCampo, "idPessoa") == 0){
@@ -224,11 +227,13 @@ void buscarregistros(char *nomeArquivoPessoa, char *nomeArquivoIndice, int n){
                 int tamRegistro;
                 fread(&tamRegistro, sizeof(int), 1, arqPessoa);
                 
+                //pula os registros removidos
                 if(removido == '1'){
                     fseek(arqPessoa, tamRegistro - 5, SEEK_CUR);
                     continue;
                 }
 
+                //leitura dos campos do registro
                 fread(&reg.idPessoa, sizeof(int), 1, arqPessoa);
                 fread(&reg.idadePessoa, sizeof(int), 1, arqPessoa);
                 fread(&reg.tamNomePessoa, sizeof(int), 1, arqPessoa);
