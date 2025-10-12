@@ -1,46 +1,38 @@
 CC = gcc
 
-CFLAGS = -Wall -lm
+CFLAGS = -lm
 
 TARGET = trabPratico
-MAIN = ./src/main.c
-MAIN_O = ./objects/main.o
+MAIN = main
+CRIAR_ARQUIVOS = criarArquivos
+LEITURA_BUSCA_ARQUIVOS = leituraBuscaArquivos
+UTILIDADES = utilidades
 
-CREATE_FILES_C = ./src/createFiles.c
-CREATE_FILES_H = ./headers/createFiles.h
-CREATE_FILES_O = ./objects/createFiles.o
-
-AUXILIAR_C = ./src/auxiliar.c
-AUXILIAR_H = ./headers/auxiliar.h
-AUXILIAR_O = ./objects/auxiliar.o
-
-UTILIDADES_C = ./src/utilidades.c
-UTILIDADES_H = ./headers/utilidades.h
-UTILIDADES_O = ./objects/utilidades.o
-
-READ_BINARY_C = ./src/readBinary.c
-READ_BINARY_H = ./headers/readBinary.h
-READ_BINARY_O = ./objects/readBinary.o
+AUXILIAR_CRIAR_ARQUIVOS = auxiliarCriarArquivos
+AUXILIAR_LEITURA_BUSCA = auxiliarLeituraBusca
 
 all: $(TARGET)
 
-$(TARGET): $(MAIN_O) $(CREATE_FILES_O) $(AUXILIAR_O) $(UTILIDADES_O) $(READ_BINARY_O)
-	$(CC) $(MAIN_O) $(CREATE_FILES_O) $(AUXILIAR_O) $(UTILIDADES_O) $(READ_BINARY_O) -o $(TARGET) $(CFLAGS)
+$(TARGET): ./objects/$(MAIN).o ./objects/$(CRIAR_ARQUIVOS).o ./objects/$(AUXILIAR_CRIAR_ARQUIVOS).o ./objects/$(UTILIDADES).o ./objects/$(LEITURA_BUSCA_ARQUIVOS).o ./objects/$(AUXILIAR_LEITURA_BUSCA).o
+	$(CC) ./objects/$(MAIN).o ./objects/$(CRIAR_ARQUIVOS).o ./objects/$(AUXILIAR_CRIAR_ARQUIVOS).o ./objects/$(UTILIDADES).o ./objects/$(LEITURA_BUSCA_ARQUIVOS).o ./objects/$(AUXILIAR_LEITURA_BUSCA).o -o $(TARGET) $(CFLAGS)
 
-$(MAIN_O): $(MAIN) $(CREATE_FILES_H)
-	$(CC) -c $(MAIN) -o $(MAIN_O)
+./objects/$(MAIN).o: ./src/$(MAIN).c ./headers/$(CRIAR_ARQUIVOS).h ./headers/$(LEITURA_BUSCA_ARQUIVOS).h
+	$(CC) -c ./src/$(MAIN).c -o ./objects/$(MAIN).o
 
-$(CREATE_FILES_O): $(CREATE_FILES_C) $(CREATE_FILES_H) $(AUXILIAR_H) $(UTILIDADES_H) $(READ_BINARY_H)
-	$(CC) -c $(CREATE_FILES_C) -o $(CREATE_FILES_O)
+./objects/$(CRIAR_ARQUIVOS).o: ./src/$(CRIAR_ARQUIVOS).c ./headers/$(CRIAR_ARQUIVOS).h ./auxiliares/headers/$(AUXILIAR_CRIAR_ARQUIVOS).h ./headers/$(UTILIDADES).h
+	$(CC) -c ./src/$(CRIAR_ARQUIVOS).c -o ./objects/$(CRIAR_ARQUIVOS).o
 
-$(AUXILIAR_O): $(AUXILIAR_C) $(AUXILIAR_H)
-	$(CC) -c $(AUXILIAR_C) -o $(AUXILIAR_O)
+./objects/$(AUXILIAR_CRIAR_ARQUIVOS).o: ./auxiliares/src/$(AUXILIAR_CRIAR_ARQUIVOS).c ./auxiliares/headers/$(AUXILIAR_CRIAR_ARQUIVOS).h 
+	$(CC) -c ./auxiliares/src/$(AUXILIAR_CRIAR_ARQUIVOS).c -o ./objects/$(AUXILIAR_CRIAR_ARQUIVOS).o
 
-$(UTILIDADES_O): $(UTILIDADES_C) $(UTILIDADES_H)
-	$(CC) -c $(UTILIDADES_C) -o $(UTILIDADES_O)
+./objects/$(UTILIDADES).o: ./src/$(UTILIDADES).c ./headers/$(UTILIDADES).h
+	$(CC) -c ./src/$(UTILIDADES).c -o ./objects/$(UTILIDADES).o
 
-$(READ_BINARY_O): $(READ_BINARY_C) $(READ_BINARY_H)
-	$(CC) -c $(READ_BINARY_C) -o $(READ_BINARY_O)
+./objects/$(LEITURA_BUSCA_ARQUIVOS).o: ./src/$(LEITURA_BUSCA_ARQUIVOS).c ./headers/$(LEITURA_BUSCA_ARQUIVOS).h ./auxiliares/headers/$(AUXILIAR_LEITURA_BUSCA).h
+	$(CC) -c ./src/$(LEITURA_BUSCA_ARQUIVOS).c -o ./objects/$(LEITURA_BUSCA_ARQUIVOS).o
+
+./objects/$(AUXILIAR_LEITURA_BUSCA).o: ./auxiliares/src/$(AUXILIAR_LEITURA_BUSCA).c ./auxiliares/headers/$(AUXILIAR_LEITURA_BUSCA).h
+	$(CC) -c ./auxiliares/src/$(AUXILIAR_LEITURA_BUSCA).c -o ./objects/$(AUXILIAR_LEITURA_BUSCA).o
 
 clean:
 	rm -f ./objects/*.o $(TARGET)
@@ -48,5 +40,8 @@ clean:
 delete:
 	rm -f ./*.bin
 
+delete_zip:
+	rm -f ./*.zip
+
 run: $(TARGET)
-	$(TARGET)
+	./$(TARGET)

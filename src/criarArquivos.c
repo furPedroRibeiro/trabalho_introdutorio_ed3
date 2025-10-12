@@ -3,8 +3,8 @@
 
 //createFiles.c tem como principal função usar e implementar funções e variáveis definidas em createFiles.h e algumas outras funções e variáveis vindas de outro arquivo
 //nesse arquivo estão as funcionalidades 1 e 2, que dizem respeito a criação de arquivo de índice e escrita nos arquivos de índice e de dados 
-#include "../headers/createFiles.h"
-#include "../headers/auxiliar.h"
+#include "../headers/criarArquivos.h"
+#include "../auxiliares/headers/auxiliarCriarArquivos.h"
 
 //inclui utilidades.h para usar a função binário na tela
 #include "../headers/utilidades.h"
@@ -27,8 +27,6 @@ void criarIndice(char *nomeArquivoIndice){
     printf("Falha no processamento do arquivo.");
     return;
   }
-
-  int numero = 05;
   //escreve o cabeçalho no arquivo
   fwrite(&status, sizeof(char), 1, arqIndice);
   fwrite(lixo, sizeof(char), strlen(lixo), arqIndice);
@@ -69,7 +67,8 @@ void criarArquivoDados(char *nomeArquivoEntrada, char *nomeArquivoDados, char *n
     
   }
   //testando se csv existe
-  char caminho_2[] = "./dados.csv";
+  char caminho_2[] = "./";
+  strcat(caminho_2, nomeArquivoEntrada);
   FILE *arqEntrada = fopen(caminho_2, "r");
   //se der erro no processamento do arquivo, aparece a seguinte mensagem:
   if(arqEntrada == NULL){
@@ -82,25 +81,25 @@ void criarArquivoDados(char *nomeArquivoEntrada, char *nomeArquivoDados, char *n
   //chama uma função para criar uma estrutura de dados com todos os registros do arquivo de entrada, e cria também a estrutura de dados do indice. A função já faz as inserções no arquivo de dados e no arquivo de índice
   lerCSV(arqDados, arqIndice, arqEntrada);
 
-  //cria e abre arquivo pra escrita para verificar o byteoffset que está no cabeçalho
-  FILE* arqDadosLeitura = fopen(caminho, "rb");
-  if(arqDadosLeitura == NULL){
-    puts("Falha no processamento do arquivo.");
-    return;
-  } else{
+  // //cria e abre arquivo pra escrita para verificar o byteoffset que está no cabeçalho
+  // FILE* arqDadosLeitura = fopen(caminho, "rb");
+  // if(arqDadosLeitura == NULL){
+  //   puts("Falha no processamento do arquivo.");
+  //   return;
+  // } else{
     
-  }
-  int64_t proxByteoffset;
-  fseek(arqDadosLeitura, 1, SEEK_SET);
-  int quantidadePessoas = 0;
-  fread(&quantidadePessoas, sizeof(int), 1, arqDados);
-  int quantidadeRemovidos = 0;
-  fread(&quantidadeRemovidos, sizeof(int), 1, arqDados);
-  fread(&proxByteoffset, sizeof(int64_t), 1, arqDados);
-  printf("Proximo Byteoffset disponivel: %ld\n", proxByteoffset);
-  printf("Qtd pessoas: %d\n", quantidadePessoas);
-  printf("Qtd removidos: %d\n", quantidadeRemovidos);
-  fclose(arqDadosLeitura);
+  // }
+  // int64_t proxByteoffset;
+  // fseek(arqDadosLeitura, 1, SEEK_SET);
+  // int quantidadePessoas = 0;
+  // fread(&quantidadePessoas, sizeof(int), 1, arqDados);
+  // int quantidadeRemovidos = 0;
+  // fread(&quantidadeRemovidos, sizeof(int), 1, arqDados);
+  // fread(&proxByteoffset, sizeof(int64_t), 1, arqDados);
+  // printf("Proximo Byteoffset disponivel: %ld\n", proxByteoffset);
+  // printf("Qtd pessoas: %d\n", quantidadePessoas);
+  // printf("Qtd removidos: %d\n", quantidadeRemovidos);
+  // fclose(arqDadosLeitura);
 
   //usa função binário na tela como especificado no trabalho
   binarioNaTela(nomeArquivoDados);

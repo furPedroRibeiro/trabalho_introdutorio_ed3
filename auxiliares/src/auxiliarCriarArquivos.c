@@ -1,7 +1,7 @@
 //Aluno 1: Pedro Luis de Alencar Ribeiro N° USP: 15590852
 //Aluno 2: Bianca Duarte Batista Lacerda N° USP: 15443221
 
-#include "../headers/auxiliar.h"
+#include "../headers/auxiliarCriarArquivos.h"
 
 //definindo que as raízes são nulas
 registro* raizLista = NULL;
@@ -30,7 +30,7 @@ void lerCSV(FILE* arquivoDados, FILE* arquivoIndice, FILE* arquivoEntrada){
   //fgets para ignorar a primeira linha do arquivo csv, que contém os nomes dos campos
   fgets(bufferLinha, sizeof(bufferLinha), arquivoEntrada);
 
-  //função para criar o arquivo de dados e definir o cabeçalho é chamada antes da leitura começar
+  //função para criar definir o cabeçalho do arquivo de dados é chamada antes da leitura começar
   criaCabecalhoArquivoDados(arquivoDados, status, quantidadePessoas, quantidadeRemovidos, proxByteoffset);
 
   //aqui começa a leitura a partir da segunda linha do arquivo de dados
@@ -40,7 +40,7 @@ void lerCSV(FILE* arquivoDados, FILE* arquivoIndice, FILE* arquivoEntrada){
     //contador de tamanho de registro, tem no mínimo 21 bytes por registro por causa dos campos de tamanho fixo
     int tamRegistroBytes = 16;
     //removendo \n do fim da string
-    bufferLinha[strcspn(bufferLinha, "\n")] = '\0';
+    bufferLinha[strcspn(bufferLinha, "\r\n")] = '\0';
 
     //criando ponteiro que aponta para o buffer que armazena a linha
     char *str = bufferLinha;
@@ -90,13 +90,9 @@ void criaCabecalhoArquivoDados(FILE* arquivoDados, char status, int quantidadePe
   //variável para contar se o tamanho do cabeçalho ta certo:
   int tamCabecalho = 0;
   fwrite(&status, sizeof(char), 1, arquivoDados);
-  tamCabecalho += sizeof(char);
   fwrite(&quantidadePessoas, sizeof(int), 1, arquivoDados);
-  tamCabecalho += sizeof(int);
   fwrite(&quantidadeRemovidos, sizeof(int), 1, arquivoDados);
-  tamCabecalho += sizeof(int);
   fwrite(&proxByteoffsetAtual, sizeof(int64_t), 1, arquivoDados);
-  tamCabecalho += sizeof(int64_t);
 }
 
 //função para inserir um registro no arquivo de dados
@@ -133,7 +129,7 @@ void insereRegistro(registro* novoRegistro, FILE* arquivoDados, int quantidadeRe
   }
 
   //atualizando byteoffset de modo que o próximo byteoffset livre seja depois do registro que acabou de ser inserido
-  proxByteoffset += novoRegistro->tamRegistro+5;
+  proxByteoffset += (novoRegistro->tamRegistro)+5;
   //agora devemos atualizar o registro de cabeçalho:
   quantidadePessoas++;
   //movendo ponteiro do arquivo para o byte 1:
@@ -199,7 +195,7 @@ void criarNoRegistro(registro* novoRegistro, char *campoIdPessoa, char *campoIda
   }
 
   //definindo nome da pessoa
-  if(campoNomePessoa != NULL && campoNomeUsuario[0] != '\0'){
+  if(campoNomePessoa != NULL && campoNomePessoa[0] != '\0'){
     strcpy(novoRegistro->nome, campoNomePessoa);
     //para esse campo, é necessário também armazenar o tamanho do nome da pessoa
     novoRegistro->tamanhoNomePessoa = strlen(campoNomePessoa);

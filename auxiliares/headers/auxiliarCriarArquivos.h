@@ -2,8 +2,8 @@
 //Aluno 2: Bianca Duarte Batista Lacerda N° USP: 15443221
 
 //esse arquivo de cabeçalho .h tem como essência definir as funções, variáveis, etc. que podem ser usadas e implementadas por todos os arquivos .c, portanto são funções, estruturas de dados e variáveis auxiliares
-#ifndef AUXILIAR_H
-#define AUXILIAR_H
+#ifndef AUXILIAR_CRIAR_H
+#define AUXILIAR_CRIAR_H
 
 //inclui as principais bibliotecas e as únicas utilizadas neste projeto
 #include <stdio.h>

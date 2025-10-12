@@ -1,8 +1,8 @@
 //Aluno 1: Pedro Luis de Alencar Ribeiro N° USP: 15590852
 //Aluno 2: Bianca Duarte Batista Lacerda N° USP: 15443221
 
-#include "../headers/createFiles.h"
-#include "../headers/readBinary.h"
+#include "../headers/criarArquivos.h"
+#include "../headers/leituraBuscaArquivos.h"
 
 int main(){
   //variáveis que podem ser usadas para chamadas e execução de funções:
@@ -14,17 +14,26 @@ int main(){
   char *nomeArquivoSaida;
 
   //primeiro deve-se receber a entrada do usuário para saber a saída desejada e qual função executar
-
-  //obs: o programa terá apenas 1 entrada inicial
-  char bufferEntrada[100];
   
   //variável responsável por armazenar o parâmetro inicial no primeiro uso de strtok
   char* parametro;
   int codFuncionalidade;
   //faz a leitura da entrada através de stdin
-  fgets(bufferEntrada, sizeof(bufferEntrada), stdin);
-  //removendo \n
-  bufferEntrada[strcspn(bufferEntrada, "\n")] = '\0';
+  int c = 0; 
+  int i = 0;
+  char bufferEntrada[1024];
+
+  // lê até EOF, \0 ou \n — cobre todos os casos possíveis
+  while ((c = getchar()) != EOF && c != '\0' && c != '\n') {
+      if (i < sizeof(bufferEntrada) - 1) {
+        bufferEntrada[i++] = c;
+      } else {
+        break; // evita estouro de buffer
+      }
+  }
+  bufferEntrada[i] = '\0';
+
+
   //salvando primeiro parâmetro da entrada
   parametro = strtok(bufferEntrada, " ");
   //atribuindo o código da funcionalidade como inteiro para codFuncionalidade

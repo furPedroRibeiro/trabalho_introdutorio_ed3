@@ -5,7 +5,10 @@
 //nesse arquivo estão as funcionalidades 3 e 4, que dizem respeito a busca nos arquivos de índice e de dados
 
 //incluindo arquivos de cabeçalho utilizados nesse arquivo de implementação
-#include "../headers/readBinary.h"
+#include "../headers/leituraBuscaArquivos.h"
+#include "../auxiliares/headers/auxiliarLeituraBusca.h"
+
+struct registro_2 reg;  // variável global criada aqui
 
 void listarRegistros(char *nomeArquivoEntrada){
     // abrindo o caminho em que o arquivo está
@@ -29,7 +32,7 @@ void listarRegistros(char *nomeArquivoEntrada){
     //lendo status
     if (fread(&status, sizeof(status), 1, arqPessoa) != 1){
         // Se o status for diferente de 1 o arquivo de dados está inconsistente
-        puts("Falha no processamento do arquivo");
+        puts("Falha no processamento do arquivo.");
         fclose(arqPessoa);
         return;
     };
