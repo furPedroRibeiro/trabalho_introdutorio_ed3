@@ -7,9 +7,12 @@
 //incluindo arquivos de cabeçalho utilizados nesse arquivo de implementação
 #include "../headers/leituraBuscaArquivos.h"
 #include "../auxiliares/headers/auxiliarLeituraBusca.h"
+#include "../headers/utilidades.h"
 
-struct registro_2 reg;  // variável global criada aqui
+// Definição da variável global
+struct registro_2 reg;
 
+//Funcionalidade 3:
 void listarRegistros(char *nomeArquivoEntrada){
     // abrindo o caminho em que o arquivo está
     char caminho_2[100] = "./";
@@ -32,10 +35,10 @@ void listarRegistros(char *nomeArquivoEntrada){
     //lendo status
     if (fread(&status, sizeof(status), 1, arqPessoa) != 1){
         // Se o status for diferente de 1 o arquivo de dados está inconsistente
-        puts("Falha no processamento do arquivo.");
+        puts("Falha no processamento do arquivo");
         fclose(arqPessoa);
         return;
-    };
+    }
     //lendo quantidade de pessoas
     fread(&quantidadePessoas, sizeof(int), 1, arqPessoa);
     //lendo quantidade de pessoas removidas
@@ -70,27 +73,115 @@ void listarRegistros(char *nomeArquivoEntrada){
         reg.nomeUsuario[reg.tamNomeUsuario]='\0';
 
         // Exibe o registro formatado
-        //exibindo id
-        printf("Dados da pessoa de codigo %d\n", reg.idPessoa);
-        //exibindo nome
-        if (reg.tamNomePessoa > 0){
-            printf("Nome: %s\n", reg.nomePessoa);
-        } else{
-            printf("Nome: -\n");
-        }
-        //exibindo idade
-        if (reg.idadePessoa == -1){
-            printf("Idade: -\n");
-        } else{
-            printf("Idade: %d\n", reg.idadePessoa);
-        }
-        //exibindo nome de usuário
-        if (reg.tamNomeUsuario > 0){
-            printf("Usuario: %s\n\n", reg.nomeUsuario);
-        } else{
-            printf("Usuario: -\n\n");
-        }
+        // Usa função auxiliar para imprimir
+        imprimirRegistro(reg.idPessoa, reg.idadePessoa, reg.tamNomePessoa, reg.nomePessoa, reg.tamNomeUsuario, reg.nomeUsuario);
     }
     //fechando arquivo
+    fclose(arqPessoa);
+}
+
+//aproveitando a struct que ja foi criada em auxiliar.h
+typedef struct indice indice;
+
+//funcionalidade 4
+void buscarRegistros(char *nomeArquivoPessoa, char *nomeArquivoIndice, int n){
+    // Abertura dos arquivos
+    char caminho_2[100] = "./";
+    strcat(caminho_2, nomeArquivoPessoa);
+    FILE *arqPessoa = fopen(caminho_2, "rb");
+
+    char caminho_3[100] = "./";
+    strcat(caminho_3, nomeArquivoIndice);
+    FILE *arquivoIndice = fopen(caminho_3, "rb");
+
+    if(arqPessoa == NULL || arquivoIndice == NULL){
+        puts("Falha no processamento do arquivo.");
+        return;
+    }
+
+    //carrega o arquivo de índice em um vetor
+    fseek(arquivoIndice, 0, SEEK_END);
+    long sizeIndice = ftell(arquivoIndice) - 12; // remove os bytes do cabeçalho
+
+    //calcula quantos registros de índice existem no arquivo
+    int qtdIndice = sizeIndice / (sizeof(int) + sizeof(int64_t));
+
+    //posiciona o ponteiro depois do cabeçalho
+    fseek(arquivoIndice, 12, SEEK_SET);
+
+    //aloca memória
+    indice *vetorIndice = malloc(qtdIndice * sizeof(indice));
+    
+    //carrega o índice completo no vetor
+    for(int i = 0; i < qtdIndice; i++){
+        fread(&vetorIndice[i].idPessoa, sizeof(int), 1, arquivoIndice);
+        fread(&vetorIndice[i].byteOffset, sizeof(int64_t), 1, arquivoIndice);
+    }
+    fclose(arquivoIndice);
+
+    //obtem o tamanho do arquivo de dados
+    fseek(arqPessoa, 0, SEEK_END);
+    long sizeDados = ftell(arqPessoa);
+
+    //loop de buscas
+    for(int i = 0; i < n; i++){
+        int entrada;
+        char nomeCampo[100], valorCampo[100];
+        int find = 0;
+
+        // lê a linha de busca no formato: número nomeCampo=valorCampo
+        scanf("%d", &entrada);
+        scanf("%[^=]", nomeCampo);
+        getchar(); // consome '='
+        scan_quote_string(valorCampo);
+
+        //caso 1:busca por idPessoa usando indice
+        if(strcmp(nomeCampo, "idPessoa") == 0){
+            int idBusca = atoi(valorCampo);
+            int64_t offset = buscaBinariaIndice(vetorIndice, qtdIndice, idBusca);
+            if(offset != -1){
+                imprimirRegistroPorByteOffset(arqPessoa, offset);
+                find = 1;
+            }
+        } 
+        //caso 2:busca sequencial por outros campos
+        else {
+            fseek(arqPessoa, 17, SEEK_SET); // pula o cabeçalho
+
+            while(ftell(arqPessoa) < sizeDados){
+                char removido;
+                fread(&removido, sizeof(char), 1, arqPessoa);
+                
+                int tamRegistro;
+                fread(&tamRegistro, sizeof(int), 1, arqPessoa);
+                
+                //pula os registros removidos
+                if(removido == '1'){
+                    fseek(arqPessoa, tamRegistro - 5, SEEK_CUR);
+                    continue;
+                }
+
+                //leitura dos campos do registro
+                fread(&reg.idPessoa, sizeof(int), 1, arqPessoa);
+                fread(&reg.idadePessoa, sizeof(int), 1, arqPessoa);
+                fread(&reg.tamNomePessoa, sizeof(int), 1, arqPessoa);
+                fread(reg.nomePessoa, sizeof(char), reg.tamNomePessoa, arqPessoa);
+                reg.nomePessoa[reg.tamNomePessoa] = '\0';
+                fread(&reg.tamNomeUsuario, sizeof(int), 1, arqPessoa);
+                fread(reg.nomeUsuario, sizeof(char), reg.tamNomeUsuario, arqPessoa);
+                reg.nomeUsuario[reg.tamNomeUsuario] = '\0';
+
+                if ((strcmp(nomeCampo, "idade") == 0 && reg.idadePessoa == atoi(valorCampo)) ||
+                    (strcmp(nomeCampo, "nomePessoa") == 0 && strcmp(reg.nomePessoa, valorCampo) == 0) ||
+                    (strcmp(nomeCampo, "nomeUsuario") == 0 && strcmp(reg.nomeUsuario, valorCampo) == 0)) {
+                    
+                    imprimirRegistro(reg.idPessoa, reg.idadePessoa, reg.tamNomePessoa, reg.nomePessoa, reg.tamNomeUsuario, reg.nomeUsuario);
+                    find = 1;
+                }
+            }
+        }
+    }
+
+    free(vetorIndice);
     fclose(arqPessoa);
 }

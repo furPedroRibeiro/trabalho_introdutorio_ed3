@@ -10,6 +10,7 @@
 
 //função de listar todos os registros, é a funcionalidade 3 do trabalho e tem como objetivo listar todos os registros do arquivo de dados
 void listarRegistros(char *nomeArquivoEntrada);
+void buscarRegistros(char *nomeArquivoPessoa, char *nomeArquivoIndice, int n);
 
 
 #endif
