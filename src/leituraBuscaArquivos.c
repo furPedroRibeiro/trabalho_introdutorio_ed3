@@ -25,14 +25,9 @@ void listarRegistros(char *nomeArquivoEntrada){
         return;
     }
 
-    // Leitura do cabeçalho do arquivo binário
+    //Leitura do cabeçalho do arquivo binário - leitura do status
     //criação de variáveis para armazenar cabeçalho
     char status;
-    int quantidadePessoas;
-    int quantidadeRemovidos;
-    long int proxByteoffset;
-
-    // fread(buff, sizeof, qnt, FILE)
     //lendo status
     if (fread(&status, sizeof(status), 1, arqPessoa) != 1){
         // Se o status for diferente de 1 o arquivo de dados está inconsistente
@@ -40,13 +35,6 @@ void listarRegistros(char *nomeArquivoEntrada){
         fclose(arqPessoa);
         return;
     }
-    //lendo quantidade de pessoas
-    fread(&quantidadePessoas, sizeof(int), 1, arqPessoa);
-    //lendo quantidade de pessoas removidas
-    fread(&quantidadeRemovidos, sizeof(int), 1, arqPessoa);
-    //lendo próximo byteoffset livre para registro
-    fread(&proxByteoffset, sizeof(long int), 1, arqPessoa);
-
     // Tamanho do arquivo
     fseek(arqPessoa, 0, SEEK_END);
     long size = ftell(arqPessoa);
@@ -81,9 +69,9 @@ void listarRegistros(char *nomeArquivoEntrada){
     fclose(arqPessoa);
 }
 
-//funcionalidade 4
+//Funcionalidade 4
 void buscarRegistros(char *nomeArquivoPessoa, char *nomeArquivoIndice, int n){
-    // Abertura dos arquivos
+    //abertura dos arquivos
     char caminho[100] = "./";
     strcat(caminho, nomeArquivoPessoa);
     FILE *arqPessoa = fopen(caminho, "rb");
@@ -94,6 +82,23 @@ void buscarRegistros(char *nomeArquivoPessoa, char *nomeArquivoIndice, int n){
 
     if(arqPessoa == NULL || arquivoIndice == NULL){
         puts("Falha no processamento do arquivo.");
+        return;
+    }
+
+    //leitura do status dos arquivos
+    char statusPessoa, statusIndice;
+    //Leitura do status do arquivo pessoa
+    if (fread(&statusPessoa, sizeof(statusPessoa), 1, arqPessoa) != 1){
+        // Se o status for diferente de 1 o arquivo de dados está inconsistente
+        puts("Falha no processamento do arquivo");
+        fclose(arqPessoa);
+        return;
+    }
+    //leitura do status do arquivo de indice
+    if (fread(&statusIndice, sizeof(statusIndice), 1, arquivoIndice) != 1){
+        // Se o status for diferente de 1 o arquivo de dados está inconsistente
+        puts("Falha no processamento do arquivo");
+        fclose(arquivoIndice);
         return;
     }
 
@@ -117,8 +122,8 @@ void buscarRegistros(char *nomeArquivoPessoa, char *nomeArquivoIndice, int n){
     }
     fclose(arquivoIndice);
 
-    //obtem o tamanho do arquivo de dados
-    fseek(arqPessoa, 0, SEEK_END);
+    //obtem o tamanho do arquivo pessoa e posiciona o ponteiro apos o cabecalho
+    fseek(arqPessoa,0, SEEK_END);
     long sizeDados = ftell(arqPessoa);
 
     //loop de buscas
@@ -127,10 +132,10 @@ void buscarRegistros(char *nomeArquivoPessoa, char *nomeArquivoIndice, int n){
         char nomeCampo[100], valorCampo[100];
         int find = 0;
 
-        // lê a linha de busca no formato: número nomeCampo=valorCampo
+        //le a linha de busca no formato: número nomeCampo=valorCampo
         scanf("%d", &entrada);
         scanf(" %[^=]", nomeCampo);
-        getchar(); // consome '='
+        getchar();
         scan_quote_string(valorCampo);
 
         //caso 1:busca por idPessoa usando indice
@@ -144,6 +149,7 @@ void buscarRegistros(char *nomeArquivoPessoa, char *nomeArquivoIndice, int n){
         } 
         //caso 2:busca sequencial por outros campos
         else {
+
             fseek(arqPessoa, 17, SEEK_SET); // pula o cabeçalho
 
             while(ftell(arqPessoa) < sizeDados){
@@ -173,10 +179,12 @@ void buscarRegistros(char *nomeArquivoPessoa, char *nomeArquivoIndice, int n){
                 fread(reg.nomeUsuario, sizeof(char), reg.tamNomeUsuario, arqPessoa);
                 reg.nomeUsuario[reg.tamNomeUsuario] = '\0';
 
-                if ((strcmp(nomeCampo, "idade") == 0 && reg.idadePessoa == atoi(valorCampo)) || (strcmp(nomeCampo, "idadePessoa") == 0 && reg.idadePessoa == atoi(valorCampo)) || (strcmp(nomeCampo, "nomePessoa") == 0 && strcmp(reg.nomePessoa, valorCampo) == 0) || (strcmp(nomeCampo, "nomeUsuario") == 0 && strcmp(reg.nomeUsuario, valorCampo) == 0)) {
+                if ((strcmp(nomeCampo, "idadePessoa") == 0 && reg.idadePessoa == atoi(valorCampo)) ||
+                    (strcmp(nomeCampo, "nomePessoa") == 0 && strcmp(reg.nomePessoa, valorCampo) == 0) ||
+                    (strcmp(nomeCampo, "nomeUsuario") == 0 && strcmp(reg.nomeUsuario, valorCampo) == 0)) {
                     imprimirRegistro(reg.idPessoa, reg.idadePessoa, reg.tamNomePessoa, reg.nomePessoa, reg.tamNomeUsuario, reg.nomeUsuario);
                     find = 1;
-                }
+            }
             }
         }
         if(find == 0){

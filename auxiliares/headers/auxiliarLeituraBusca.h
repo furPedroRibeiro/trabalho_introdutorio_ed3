@@ -21,8 +21,6 @@ struct registro_2 {
 typedef struct indice{
   int idPessoa;
   int64_t byteOffset;
-  struct indice *proxIndice;
-  struct indice *antIndice;
 } indice;
 
 void imprimirRegistro(int idPessoa, int idadePessoa, int tamNomePessoa, char *nomePessoa, int tamNomeUsuario, char *nomeUsuario);

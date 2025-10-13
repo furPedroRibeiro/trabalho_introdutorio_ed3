@@ -48,6 +48,7 @@ int64_t buscaBinariaIndice(indice *vetor, int tamanho, int idBuscado){
 
 //imprimir registro encontrado por byteOffset
 void imprimirRegistroPorByteOffset(FILE *arqPessoa, int64_t byteOffset, struct registro_2 reg){
+    //posiciona o ponteiro no registro 
     fseek(arqPessoa, byteOffset, SEEK_SET);
 
     char removido;
@@ -56,6 +57,7 @@ void imprimirRegistroPorByteOffset(FILE *arqPessoa, int64_t byteOffset, struct r
         return; // registro marcado como removido
     }
 
+    //le o tamanho do registro
     int tamRegistro;
     fread(&tamRegistro, sizeof(int), 1, arqPessoa);
 
